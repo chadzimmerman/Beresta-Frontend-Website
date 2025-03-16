@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
+* {
+  background-color: #FFFFFF;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: 'inknut antiqua', sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header-container {
+  background-color: blue;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.banner-container {
+  width: 100vw;
+  max-width: 2000px; /* Adjust as needed */
+  height: auto;
+  margin: 0 auto;
+}
+
+.banner-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.carousel-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  padding: 40px 20px;
+  gap: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.trending-title {
+  font-size: 30px;
+  padding-left: 15vw;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.carousel {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.carousel-item {
+  flex: 0 0 18%;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.carousel img {
+  width: 100%; /* Make images responsive */
+  height: auto;
+  max-width: 100%;
+}
+
+.arrow-button {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.left {
+  margin-right: 10px;
+}
+
+.right {
+  margin-left: 10px;
 }
