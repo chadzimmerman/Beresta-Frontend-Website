@@ -1,0 +1,38 @@
+{
+    "header": {
+      "categories": "Categories",
+      "aboutUs": "About Us",
+      "contactUs": "Contact Us",
+      "cart": "Cart",
+      "searchBar": "Search books..."
+    },
+    "trendingBooks": {
+      "title": "Trending Titles"
+    },
+    "aboutUs": {
+      "title": "About Us",
+      "description": "Beresta Literary Press was founded in 2020 as a passion project by husband-and-wife team Chad and Svetlana Zimmerman, dedicated to bridging cultures through language and storytelling. As authors, translators, illustrators, and publishers, we create unique works that celebrate the richness of diverse traditions. With Svetlana’s roots in Russia and Chad’s deep connection to Japan, we bring together our experiences to craft original stories, translate previously untranslated works, and develop educational materials that make cultural learning accessible to all ages. Our mission is to share the values, wisdom, and beauty of these cultures with a modern audience, fostering a deeper appreciation for the stories that shape us."
+    },
+    "contactUs": {
+      "title": "Contact Us",
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "message": "Your Message",
+      "submit": "Send"
+    },
+    "newsletter": {
+      "title": "Get a free eBook when you sign up for our mailing list!",
+      "description": "Plus, receive recommendations and exclusive offers on all of your favorite books from Beresta Literary Press.",
+      "submit": "Sign Me Up"
+    },
+    "footer": {
+      "home": "Home",
+      "aboutUs": "About Us",
+      "contactUs": "Contact Us",
+      "ourBooks": "Our Books"
+    },
+      "loading": "Loading...",
+      "bookNotFound": "Book not found",
+      "author": "Author"
+  }

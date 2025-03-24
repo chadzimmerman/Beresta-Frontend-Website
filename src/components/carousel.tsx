@@ -1,24 +1,42 @@
-import React, { useState } from "react";
-import MarvelousMiracles1 from "../assets/marvelous-miracles-1.jpg";
-import LearnKanjiFromYokai from "../assets/learn-kanji-with-yokai.jpg";
-import LearnKanaFromYokai from "../assets/learn-kana-with-yokai.jpg";
-import JohnTemporaryCover from "../assets/john-malinovski-temp-cover.jpg";
-import TikhonTemporaryCover from "../assets/tikhon-temp-cover.jpg";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-const books = [
-  { title: "Marvelous Miracles and Somber Stories", image: MarvelousMiracles1 },
-  { title: "Learn Kanji From Yokai", image: LearnKanjiFromYokai },
-  { title: "Learn Kana From Yokai", image: LearnKanaFromYokai },
-  { title: "The Complete Works of John Malinovsky", image: JohnTemporaryCover },
-  {
-    title: "The Moral Theology of St. Tikhon of Moscow",
-    image: TikhonTemporaryCover,
-  },
-];
+interface Book {
+  id: number;
+  title: string;
+  cover_art_url: string;
+  // Add other properties if needed
+}
 
 function TrendingBooks() {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch books from the backend when the component mounts
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/books");
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetched books:", data);
+        setBooks(data);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetch
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  //sliding functionality
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % books.length);
   };
@@ -29,7 +47,7 @@ function TrendingBooks() {
 
   return (
     <div className="trending-books-container">
-      <h2 className="trending-title">Trending Titles</h2>
+      <h2 className="trending-title">{t("trendingBooks.title")}</h2>
       <div className="carousel-container">
         <button className="arrow-button left" onClick={prevSlide}>
           {"<"}
@@ -37,14 +55,23 @@ function TrendingBooks() {
 
         <div className="carousel">
           {/* This looped display shows 4 books by wrapping the array */}
-          {books
-            .concat(books) // Duplicate the books array to enable wrapping
-            .slice(currentIndex, currentIndex + 4) // Always show 4 books
-            .map((book, index) => (
-              <div className="carousel-item" key={index}>
-                <img src={book.image} alt={book.title} />
-              </div>
-            ))}
+          {loading ? (
+            <p>Loading...</p> // Added loading state for clarity
+          ) : (
+            books
+              .concat(books)
+              .slice(currentIndex, currentIndex + 4)
+              .map((book, index) => (
+                <div className="carousel-item" key={index}>
+                  <Link to={`/book/${book.id}`}>
+                    <img
+                      src={`http://localhost:3000${book.cover_art_url}`}
+                      alt={book.title}
+                    />
+                  </Link>
+                </div>
+              ))
+          )}
         </div>
 
         <button className="arrow-button right" onClick={nextSlide}>
