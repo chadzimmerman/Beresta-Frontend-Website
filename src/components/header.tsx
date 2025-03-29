@@ -68,7 +68,7 @@ function Header() {
             <LanguageToggle />
           </li>
           <li style={styles.navItem}>
-            <a href="#cart" style={styles.cartLink}>
+            <a href="/cart" style={styles.cartLink}>
               <img src={cartIcon} alt="Cart" style={styles.cartIcon} />
               <span>{t("header.cart")}</span>
             </a>

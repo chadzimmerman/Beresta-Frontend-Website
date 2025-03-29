@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { CartContext } from "../App";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
 
@@ -30,6 +31,8 @@ function BookPage() {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
+  const { cart, setCart } = useContext(CartContext);
+  console.log("BookPage CartContext:", { cart, setCart });
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -56,6 +59,26 @@ function BookPage() {
   const formatDate = (dateString?: string) => {
     if (!dateString) return "N/A";
     return dateString.slice(0, 10);
+  };
+  const addToCart = () => {
+    if (!book) return;
+    const newItem = {
+      id: book.id,
+      title: book.title,
+      price: book.price * 100,
+      quantity: 1,
+    };
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === newItem.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === newItem.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prev, newItem];
+    });
   };
 
   console.log("Rendering - loading:", loading, "book:", book);
@@ -117,7 +140,12 @@ function BookPage() {
               >
                 Purchase on Amazon
               </a>
-              <button style={styles.cartButton}>Add to Cart</button>
+              <button style={styles.cartButton} onClick={addToCart}>
+                Add to Cart
+              </button>
+              {/* <Link to="/cart" className="go-to-cart-link">
+                <button>Go to Cart</button>
+              </Link> */}
             </div>
           </div>
 

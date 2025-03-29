@@ -160,3 +160,11 @@ body {
   gap: 70px; 
   font-size: small;
 }
+
+.footer-links a {
+  color: black;
+  text-decoration: none; 
+  font-family: "'inknut antiqua', sans-serif";
+  font-size: 16px; 
+  margin: 5px 0;
+}

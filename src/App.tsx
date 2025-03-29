@@ -1,19 +1,40 @@
-import React from "react";
+import React, { createContext, useState, useEffect } from "react";
 import "./App.css";
 import Home from "./components/home";
 import BookPage from "./components/bookPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AboutPage from "./components/aboutPage";
+import CartPage from "./components/CartPage";
+
+export const CartContext = createContext<{
+  cart: any[];
+  setCart: React.Dispatch<React.SetStateAction<any[]>>;
+}>({
+  cart: [],
+  setCart: () => {}, // Default empty function
+});
 
 function App() {
+  const [cart, setCart] = useState<any[]>(() => {
+    const saved = localStorage.getItem("cart");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/book/:id" element={<BookPage />} />
-        <Route path="/about" element={<AboutPage />} />
-      </Routes>
-    </Router>
+    <CartContext.Provider value={{ cart, setCart }}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/book/:id" element={<BookPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/cart" element={<CartPage />} />
+        </Routes>
+      </Router>
+    </CartContext.Provider>
   );
 }
 
