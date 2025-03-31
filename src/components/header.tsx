@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import logo from "../assets/temporary-header-logo.jpg";
 import cartIcon from "../assets/shopping-cart-line.png";
 import LanguageToggle from "./LanguageToggle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const categories = [
   "Fiction",
@@ -20,6 +20,11 @@ function Header() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const goToHome = () => {
+    navigate("/"); 
+  };
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
   const handleCategorySelect = (category: string) => {
@@ -30,7 +35,7 @@ function Header() {
 
   return (
     <header style={styles.header}>
-      <div style={styles.logoContainer}>
+      <div style={styles.logoContainer} onClick={goToHome}>
         <img src={logo} alt="Logo" style={styles.logo} />
         <h1 className="header-name">Beresta Literary Press</h1>
       </div>

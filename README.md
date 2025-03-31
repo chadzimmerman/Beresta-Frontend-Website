@@ -1,46 +1,45 @@
-# Getting Started with Create React App
+# Bookstore E-commerce Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This project is a dynamic, bilingual (English/Russian) e-commerce website for a small book-printing startup. It serves as a comprehensive portfolio piece, showcasing my skills in full-stack development using the MERN stack (MongoDB, Express, React, Node.js) with the addition of MySQL for data management. The site is designed to provide a seamless and interactive user experience while also supporting dynamic language toggling and a secure checkout process.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Bilingual Support (English/Russian):** Toggle between English and Russian seamlessly using the dynamic language switcher.
+- **Dynamically Generated Carousel:** The homepage features a carousel that updates dynamically with book data fetched from the Node.js/Express.js backend.
+- **Book Details Page:** Clicking on a book in the carousel redirects to a dedicated page with dynamically filled details from the backend. Users can either purchase the book via an Amazon link or add it to the cart for direct purchase through the company.
+- **Secure Checkout:** Uses the Stripe API for handling purchases securely and efficiently.
+- **MySQL Integration:** Book data and language content are stored and retrieved from a MySQL database.
+- **Responsive Design:** The site is fully responsive, designed to be accessible and user-friendly on both desktop and mobile devices.
+- **Tech Stack:**
+  - Frontend: React, TypeScript
+  - Backend: Node.js, Express.js, MySQL
+  - Payment Gateway: Stripe API
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Current Status
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The project is currently under development as part of my senior year portfolio. Features still in progress include:
 
-### `npm test`
+- Search and category filtering functionality
+- Complete Russian versions of cart and about us pages
+- Improved styling of the cart page
+- Linking of the contact page
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Why This Project Stands Out
 
-### `npm run build`
+Unlike many other new graduate portfolio projects, this e-commerce site demonstrates my ability to create real-world applications with a full-stack approach. By integrating bilingual support and a dynamic carousel linked to a backend server, the project showcases my versatility in both frontend and backend development. Additionally, incorporating the Stripe API for secure transactions highlights my understanding of integrating third-party services.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Future Improvements
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+After completing the core functionality and styling, I plan to further enhance the user experience by:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Implementing advanced search and filtering
+- Adding more localized content for Russian users
+- Optimizing the checkout process with order tracking
 
-### `npm run eject`
+## Contact
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+For any questions or feedback, feel free to reach out via email or through my LinkedIn profile.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Thank you for checking out my project!

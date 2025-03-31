@@ -4,7 +4,7 @@ body {
 }
 
 .header {
-  background-color: #ECF1F5; /* Fix this later, the header isn't the right color*/
+  background-color: #ECF1F5; 
 }
 
 .header-name {
@@ -14,7 +14,7 @@ body {
 
 .banner-container {
   width: 100vw;
-  max-width: 2000px; /* Adjust as needed */
+  max-width: 2000px; 
   height: auto;
   margin: 0 auto;
 }

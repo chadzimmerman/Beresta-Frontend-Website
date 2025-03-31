@@ -65,7 +65,7 @@ function BookPage() {
     const newItem = {
       id: book.id,
       title: book.title,
-      price: book.price * 100,
+      price: Math.round(Number(book.price) * 100), // "19.99" -> 1999
       quantity: 1,
     };
     setCart((prev) => {
