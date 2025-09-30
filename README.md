@@ -3,6 +3,7 @@
 ## Overview
 
 This project is a dynamic, bilingual (English/Russian) e-commerce website for a small book-printing startup. It serves as a comprehensive portfolio piece, showcasing my skills in full-stack development using the MERN stack (MongoDB, Express, React, Node.js) with the addition of MySQL for data management. The site is designed to provide a seamless and interactive user experience while also supporting dynamic language toggling and a secure checkout process.
+![Screenshot 1](src/assets/screenshot1.png)
 
 ## Features
 
@@ -15,7 +16,10 @@ This project is a dynamic, bilingual (English/Russian) e-commerce website for a 
 - **Tech Stack:**
   - Frontend: React, TypeScript
   - Backend: Node.js, Express.js, MySQL
-  - Payment Gateway: Stripe API
+  - Payment Gateway: Stripe API, NodeMail API
+
+![Screenshot 2](src/assets/screenshot2.png)
+![Screenshot 3](src/assets/screenshot3.png)
 
 ## Current Status
 
@@ -24,7 +28,6 @@ The project is currently under development as part of my senior year portfolio. 
 - Search and category filtering functionality
 - Complete Russian versions of cart and about us pages
 - Improved styling of the cart page
-- Linking of the contact page
 
 ## Why This Project Stands Out
 
