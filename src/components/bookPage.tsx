@@ -15,7 +15,7 @@ interface Book {
   stock: number;
   description: string;
   reviews: string | null;
-  cover_art_url: string;
+  cover_photo: string;
   isbn: string;
   categories: string;
   copyright_date?: number;
@@ -24,7 +24,12 @@ interface Book {
   back_art_url?: string | null;
   inside_peek_url?: string | null;
   created_at?: string;
+  amazon_link: string | null;
+  cover_art_url: string;
 }
+
+const AMAZON_STORE =
+  "https://www.amazon.com/stores/Chad-Michael-Zimmerman/author/B093YNBZX3?ref=sr_ntt_srch_lnk_3&qid=1759242462&sr=1-3&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=c0969932-854f-468b-a234-26f687fa5ebd";
 
 function BookPage() {
   const { t } = useTranslation();
@@ -91,7 +96,7 @@ function BookPage() {
       <AltHeader />
       <div style={styles.container}>
         <img
-          src={`http://localhost:3000${book.cover_art_url}`}
+          src={`http://localhost:3000${book.cover_photo}`}
           alt={book.title}
           style={styles.cover}
         />
@@ -133,12 +138,14 @@ function BookPage() {
             </div>
             <div style={styles.buttonContainer}>
               <a
-                href="https://amazon.com"
+                href={book.amazon_link ? book.amazon_link : AMAZON_STORE}
                 style={styles.amazonButton}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Purchase on Amazon
+                {book.amazon_link
+                  ? "Purchase on Amazon"
+                  : "See All Books on Amazon"}
               </a>
               <button style={styles.cartButton} onClick={addToCart}>
                 Add to Cart

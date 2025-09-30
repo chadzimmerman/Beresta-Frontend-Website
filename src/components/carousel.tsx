@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 interface Book {
   id: number;
   title: string;
-  cover_art_url: string;
+  cover_photo: string;
   // Add other properties if needed
 }
 
@@ -65,7 +65,7 @@ function TrendingBooks() {
                 <div className="carousel-item" key={index}>
                   <Link to={`/book/${book.id}`}>
                     <img
-                      src={`http://localhost:3000${book.cover_art_url}`}
+                      src={`http://localhost:3000${book.cover_photo}`}
                       alt={book.title}
                     />
                   </Link>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import logo from "../assets/temporary-header-logo.jpg";
+import logo from "../assets/beresta-logo.png";
 import cartIcon from "../assets/shopping-cart-line.png";
 import LanguageToggle from "./LanguageToggle";
 import { Link, useNavigate } from "react-router-dom";
@@ -23,7 +23,7 @@ function Header() {
   const navigate = useNavigate();
 
   const goToHome = () => {
-    navigate("/"); 
+    navigate("/");
   };
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
@@ -106,7 +106,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: "10px",
   },
   logo: {
-    height: "50px",
+    height: "100px",
   },
   nav: {
     flex: 1,
