@@ -67,6 +67,10 @@ function TrendingBooks() {
                     <img
                       src={`http://localhost:3000${book.cover_photo}`}
                       alt={book.title}
+                      style={{
+                        borderRadius: "5px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                      }}
                     />
                   </Link>
                 </div>

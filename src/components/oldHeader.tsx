@@ -17,7 +17,7 @@ const categories = [
   "Coloring",
 ];
 
-function AltHeader() {
+function Header() {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ function AltHeader() {
     <header style={styles.header}>
       <div style={styles.logoContainer} onClick={goToHome}>
         <img src={logo} alt="Logo" style={styles.logo} />
-        <h1 style={styles.headerName}>Beresta Literary Press</h1>
+        <h1 className="header-name">Beresta Literary Press</h1>
       </div>
       <nav style={styles.nav}>
         <ul style={styles.navList}>
@@ -66,9 +66,9 @@ function AltHeader() {
             </Link>
           </li>
           <li style={styles.navItem}>
-            <Link to="/#contact" style={styles.navLink}>
+            <a href="#contact" style={styles.navLink}>
               {t("header.contactUs")}
-            </Link>
+            </a>
           </li>
           <li style={styles.navItem}>
             <LanguageToggle />
@@ -79,6 +79,13 @@ function AltHeader() {
               <span>{t("header.cart")}</span>
             </a>
           </li>
+          <li style={styles.navItem}>
+            <input
+              type="text"
+              placeholder={t("header.searchBar")}
+              style={styles.searchInput}
+            />
+          </li>
         </ul>
       </nav>
     </header>
@@ -88,41 +95,38 @@ function AltHeader() {
 const styles: { [key: string]: React.CSSProperties } = {
   header: {
     display: "flex",
-    flexDirection: "column", // Stack logo/name and nav vertically
-    alignItems: "center", // Center everything horizontally
-    padding: "20px",
-    backgroundColor: "#fff", // White background for clarity
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 20px",
+    color: "white",
   },
   logoContainer: {
+    flex: 1,
     display: "flex",
     alignItems: "center",
     gap: "10px",
-    marginBottom: "10px", // Space between name and nav
   },
   logo: {
     height: "100px",
   },
-  headerName: {
-    fontSize: "24px", // Slightly larger than original (was implicit ~16px)
-    fontFamily: "'inknut antiqua', sans-serif",
-    color: "black",
-    margin: 0, // Remove default h1 margin
-  },
   nav: {
+    flex: 1,
     display: "flex",
-    justifyContent: "center", // Center nav items
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   navList: {
     display: "flex",
     listStyleType: "none",
     padding: 0,
     margin: 0,
-    gap: "20px", // Space between nav items
+    gap: "20px",
   },
   navItem: {
+    marginLeft: "20px",
     display: "flex",
     alignItems: "center",
-    position: "relative", // For dropdown positioning
+    position: "relative",
   },
   trigger: {
     color: "black",
@@ -138,19 +142,18 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "black",
     textDecoration: "none",
     fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
   },
   dropdown: {
     position: "absolute",
     top: "100%",
-    left: "50%", // Center dropdown under button
-    transform: "translateX(-50%)", // Adjust for true centering
+    left: 0,
     backgroundColor: "#FFFFFF",
     listStyle: "none",
     padding: "5px 0",
     margin: 0,
+    minWidth: "120px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
     border: "1px solid #ccc",
-    zIndex: 1, // Ensure dropdown is above other content
   },
   dropdownItem: {
     color: "black",
@@ -159,7 +162,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: "'inknut antiqua', sans-serif",
     padding: "5px 10px",
     cursor: "pointer",
-    whiteSpace: "nowrap", // Prevent wrapping
   },
   cartLink: {
     display: "flex",
@@ -167,12 +169,17 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "black",
     textDecoration: "none",
     fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
   },
   cartIcon: {
     width: "20px",
     marginRight: "5px",
   },
+  searchInput: {
+    padding: "5px 10px",
+    fontSize: "14px",
+    border: "none",
+    borderRadius: "5px",
+  },
 };
 
-export default AltHeader;
+export default Header;

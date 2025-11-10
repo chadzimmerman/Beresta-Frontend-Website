@@ -59,78 +59,68 @@ function CartPage() {
   };
 
   return (
-    <div>
+    // 🚨 STICKY FOOTER WRAPPER 🚨
+    <div className="app-page-wrapper">
       <Header />
-      <div
-        className="shoppingCartContainer"
-        style={styles.shoppingCartContainer}
-      >
-        <h1 className="shoppingCartTitle" style={styles.shoppingCartTitle}>
-          {t("cartPage.shoppingCart")}
-        </h1>
-        <div
-          className="shoppingCartColumnHeads"
-          style={styles.shoppingCartColumnHeads}
-        >
-          <h5 className="columnHeader">{t("cartPage.title")}</h5>
-          <h5 className="columnHeader" style={styles.quantityHeader}>
-            {t("cartPage.quantity")}
-          </h5>
-          <h5 className="columnHeader">{t("cartPage.totalPrice")}</h5>
-        </div>
-        <div className="shoppingCartItems" style={styles.shoppingCartItems}>
-          {cart.length ? (
-            cart.map((item) => (
-              <div key={item.id} className="item" style={styles.item}>
-                <div style={styles.titleColumn}>{item.title}</div>
-                <div style={styles.quantityColumn}>
-                  <button
-                    style={styles.quantityButton}
-                    onClick={() => decreaseQuantity(item.id)}
-                  >
-                    -
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button
-                    style={styles.quantityButton}
-                    onClick={() => increaseQuantity(item.id)}
-                  >
-                    +
-                  </button>
-                </div>
-                <div style={styles.priceColumn}>
-                  ${((item.price * item.quantity) / 100).toFixed(2)}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>{t("cartPage.noItemsInCart")}</p>
-          )}
-        </div>
-        <div
-          className="shoppingCartSubtotals"
-          style={styles.shoppingCartSubtotals}
-        >
-          <p className="subtotal" style={styles.subtotal}>
-            {t("cartPage.subtotal")} ${(total / 100).toFixed(2)}
-          </p>
-          <p className="shipping" style={styles.shipping}>
-            {t("cartPage.shipping")}: {t("cartPage.free")}
-          </p>
-        </div>
-        <div className="totals" style={styles.totals}>
-          <h2 className="total">{t("cartPage.total")}</h2>
-          <h2 className="total">${(total / 100).toFixed(2)}</h2>
-        </div>
 
-        <div className="stripe">
-          <button
-            onClick={handleCheckout}
-            className="checkoutButton"
-            style={styles.checkoutButton}
-          >
-            {t("cartPage.checkoutWithStripe")}
-          </button>
+      {/* 🚨 VERTICAL STRETCH WRAPPER 🚨 */}
+      <div className="cart-content-and-stretch">
+        <div className="shoppingCartContainer">
+          <h1 className="shoppingCartTitle">{t("cartPage.shoppingCart")}</h1>
+          <div className="shoppingCartColumnHeads">
+            <h5 className="columnHeader">{t("cartPage.title")}</h5>
+            <h5 className="columnHeader quantity-header">
+              {t("cartPage.quantity")}
+            </h5>
+            <h5 className="columnHeader">{t("cartPage.totalPrice")}</h5>
+          </div>
+          <div className="shoppingCartItems">
+            {cart.length ? (
+              cart.map((item) => (
+                <div key={item.id} className="item">
+                  <div className="title-column">{item.title}</div>
+                  <div className="quantity-column">
+                    <button
+                      className="quantity-button"
+                      onClick={() => decreaseQuantity(item.id)}
+                    >
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      className="quantity-button"
+                      onClick={() => increaseQuantity(item.id)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="price-column">
+                    ${((item.price * item.quantity) / 100).toFixed(2)}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="no-items-message">{t("cartPage.noItemsInCart")}</p>
+            )}
+          </div>
+          <div className="shoppingCartSubtotals">
+            <p className="subtotal">
+              {t("cartPage.subtotal")} ${(total / 100).toFixed(2)}
+            </p>
+            <p className="shipping">
+              {t("cartPage.shipping")}: {t("cartPage.free")}
+            </p>
+          </div>
+          <div className="totals">
+            <h2 className="total-label">{t("cartPage.total")}</h2>
+            <h2 className="total-amount">${(total / 100).toFixed(2)}</h2>
+          </div>
+
+          <div className="stripe">
+            <button onClick={handleCheckout} className="checkoutButton">
+              {t("cartPage.checkoutWithStripe")}
+            </button>
+          </div>
         </div>
       </div>
       <Footer />
@@ -138,103 +128,6 @@ function CartPage() {
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
-  shoppingCartContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-    height: "82vh",
-  },
-  shoppingCartTitle: {
-    textAlign: "left",
-    width: "40%",
-  },
-  shoppingCartColumnHeads: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "40%",
-    borderBottom: "1px solid #ccc",
-    marginBottom: "10px",
-  },
-  shoppingCartItems: {
-    width: "40%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  item: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: "14px",
-  },
-  titleColumn: {
-    width: "50%",
-    textAlign: "left",
-  },
-  quantityColumn: {
-    width: "25%",
-    display: "flex",
-    justifyContent: "center",
-    gap: "10px",
-    alignItems: "center",
-    height: "24px",
-  },
-  quantityButton: {
-    appearance: "none",
-    background: "transparent",
-    border: "none",
-    padding: "0 5px",
-    fontSize: "16px",
-    color: "#333",
-    cursor: "pointer",
-    fontFamily: "inherit",
-    lineHeight: 1,
-    height: "16px",
-    minHeight: "16px",
-    display: "block",
-  },
-  priceColumn: {
-    width: "25%",
-    textAlign: "right",
-  },
-  quantityHeader: {
-    marginLeft: "200px",
-  },
-  shoppingCartSubtotals: {
-    width: "40%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-end",
-    borderBottom: "1px solid #ccc",
-    marginBottom: "10px",
-    fontSize: "14px",
-  },
-  subtotal: {
-    display: "flex",
-    gap: "10px", // Space between children
-  },
-  shipping: {
-    display: "flex",
-    gap: "10px",
-  },
-
-  totals: {
-    width: "40%",
-    display: "flex",
-    alignSelf: "flex-end",
-    gap: "10px",
-  },
-  checkoutButton: {
-    flex: 1,
-    backgroundColor: "#AC3737",
-    color: "white",
-    padding: "1px 20px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontFamily: "'inknut antiqua', sans-serif",
-  },
-};
+// 🚨 REMOVE the 'styles' object entirely 🚨
 
 export default CartPage;

@@ -5,6 +5,8 @@ import BookPage from "./components/bookPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AboutPage from "./components/aboutPage";
 import CartPage from "./components/CartPage";
+import SuccessPage from "./components/success";
+import CategoryPage from "./components/categoryPage";
 
 export const CartContext = createContext<{
   cart: any[];
@@ -32,6 +34,8 @@ function App() {
           <Route path="/book/:id" element={<BookPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/category/:category" element={<CategoryPage />} />
         </Routes>
       </Router>
     </CartContext.Provider>

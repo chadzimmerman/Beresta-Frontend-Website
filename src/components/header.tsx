@@ -4,53 +4,70 @@ import logo from "../assets/beresta-logo.png";
 import cartIcon from "../assets/shopping-cart-line.png";
 import LanguageToggle from "./LanguageToggle";
 import { Link, useNavigate } from "react-router-dom";
+// 🚨 New: Import the dedicated CSS file
+import "./header.css";
 
 const categories = [
   "Fiction",
   "Non-Fiction",
-  "Fairytales",
+  "Fairy Tales",
   "Translation",
   "Japanese",
   "Russian",
   "Children",
   "Poetry",
+  "Coloring",
 ];
 
 function Header() {
   const { t } = useTranslation();
+  // State for mobile menu open/close
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const navigate = useNavigate();
 
   const goToHome = () => {
     navigate("/");
   };
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  // Toggles for Category Dropdown and Mobile Menu
+  const toggleCategoryDropdown = () => setIsCategoryOpen((prev) => !prev);
+  const toggleMobileMenu = () => setIsMenuOpen((prev) => !prev);
+
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
-    setIsOpen(false);
-    console.log("Selected category:", category);
+    setIsCategoryOpen(false);
+    // Close the mobile menu after selecting a category
+    if (isMenuOpen) setIsMenuOpen(false);
+    navigate(`/category/${encodeURIComponent(category)}`);
   };
 
   return (
-    <header style={styles.header}>
-      <div style={styles.logoContainer} onClick={goToHome}>
-        <img src={logo} alt="Logo" style={styles.logo} />
+    <header className="header-main">
+      <div className="logo-container" onClick={goToHome}>
+        <img src={logo} alt="Logo" className="logo-image" />
         <h1 className="header-name">Beresta Literary Press</h1>
       </div>
-      <nav style={styles.nav}>
-        <ul style={styles.navList}>
-          <li style={styles.navItem}>
-            <button style={styles.trigger} onClick={toggleDropdown}>
+
+      {/* Hamburger Menu Button for Mobile */}
+      <button className="menu-toggle" onClick={toggleMobileMenu}>
+        {isMenuOpen ? "✕" : "☰"}
+      </button>
+
+      {/* Navigation - Conditionally show on mobile */}
+      <nav className={`nav-main ${isMenuOpen ? "is-open" : ""}`}>
+        <ul className="nav-list">
+          <li className="nav-item category-item">
+            <button className="nav-trigger" onClick={toggleCategoryDropdown}>
               {selectedCategory || t("header.categories")}
             </button>
-            {isOpen && (
-              <ul style={styles.dropdown}>
+            {isCategoryOpen && (
+              <ul className="dropdown-menu">
                 {categories.map((category, index) => (
                   <li
                     key={index}
-                    style={styles.dropdownItem}
+                    className="dropdown-item"
                     onClick={() => handleCategorySelect(category)}
                   >
                     {category}
@@ -59,31 +76,47 @@ function Header() {
               </ul>
             )}
           </li>
-          <li style={styles.navItem}>
-            <Link to="/about" style={styles.navLink}>
+
+          <li className="nav-item">
+            <Link
+              to="/about"
+              className="nav-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
               {t("header.aboutUs")}
             </Link>
           </li>
-          <li style={styles.navItem}>
-            <a href="#contact" style={styles.navLink}>
+          <li className="nav-item">
+            <a
+              href="#contact"
+              className="nav-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
               {t("header.contactUs")}
             </a>
           </li>
-          <li style={styles.navItem}>
+
+          <li className="nav-item language-toggle-wrapper">
             <LanguageToggle />
           </li>
-          <li style={styles.navItem}>
-            <a href="/cart" style={styles.cartLink}>
-              <img src={cartIcon} alt="Cart" style={styles.cartIcon} />
-              <span>{t("header.cart")}</span>
-            </a>
-          </li>
-          <li style={styles.navItem}>
+
+          <li className="nav-item search-item">
             <input
               type="text"
               placeholder={t("header.searchBar")}
-              style={styles.searchInput}
+              className="search-input"
             />
+          </li>
+
+          <li className="nav-item">
+            <Link
+              to="/cart"
+              className="cart-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <img src={cartIcon} alt="Cart" className="cart-icon" />
+              <span>{t("header.cart")}</span>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -91,92 +124,6 @@ function Header() {
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "10px 20px",
-    color: "white",
-  },
-  logoContainer: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  logo: {
-    height: "100px",
-  },
-  nav: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  navList: {
-    display: "flex",
-    listStyleType: "none",
-    padding: 0,
-    margin: 0,
-    gap: "20px",
-  },
-  navItem: {
-    marginLeft: "20px",
-    display: "flex",
-    alignItems: "center",
-    position: "relative",
-  },
-  trigger: {
-    color: "black",
-    textDecoration: "none",
-    fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
-    background: "none",
-    border: "none",
-    padding: "5px 10px",
-    cursor: "pointer",
-  },
-  navLink: {
-    color: "black",
-    textDecoration: "none",
-    fontSize: "12px",
-  },
-  dropdown: {
-    position: "absolute",
-    top: "100%",
-    left: 0,
-    backgroundColor: "#FFFFFF",
-    listStyle: "none",
-    padding: "5px 0",
-    margin: 0,
-    border: "1px solid #ccc",
-  },
-  dropdownItem: {
-    color: "black",
-    textDecoration: "none",
-    fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
-    padding: "5px 10px",
-    cursor: "pointer",
-  },
-  cartLink: {
-    display: "flex",
-    alignItems: "center",
-    color: "black",
-    textDecoration: "none",
-    fontSize: "12px",
-  },
-  cartIcon: {
-    width: "20px",
-    marginRight: "5px",
-  },
-  searchInput: {
-    padding: "5px 10px",
-    fontSize: "14px",
-    border: "none",
-    borderRadius: "5px",
-  },
-};
+// 🚨 Removed inline 'styles' object 🚨
 
 export default Header;

@@ -21,7 +21,6 @@ function Footer() {
         <Link to="/">{t("footer.home")}</Link>
         <Link to="/about">{t("footer.aboutUs")}</Link>
         <a href="/#contact">{t("footer.contactUs")}</a>
-        <Link to="/books">{t("footer.ourBooks")}</Link>
       </nav>
     </footer>
   );

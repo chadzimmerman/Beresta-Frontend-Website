@@ -1,0 +1,174 @@
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'inknut antiqua', sans-serif;
+  background-color: #FFFFFF;
+}
+
+.header {
+  background-color: #ECF1F5; 
+}
+
+.header-name {
+  font-size: medium;
+  color: black;
+}
+
+.banner-container {
+  width: 100vw;
+  max-width: 2000px; 
+  height: auto;
+  margin: 0 auto;
+}
+
+.banner-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.carousel-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 20px;
+  gap: 20px;
+}
+
+.trending-title {
+  font-size: 30px;
+  padding-left: 15vw;
+}
+
+.carousel {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.carousel-item {
+  flex: 0 0 18%;
+  text-align: center;
+  margin: 0 10px;
+}
+
+.carousel img {
+  width: 100%; 
+  height: auto;
+  max-width: 100%;
+}
+
+.arrow-button {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.left {
+  margin-right: 10px;
+}
+
+.right {
+  margin-left: 10px;
+}
+
+.about-us-container {
+  background-color: #D8DBE1;
+  width: 80vw;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto;
+  margin-bottom: 200px;
+  max-width: "800px";
+}
+
+.about-us-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.about-us-paragraph {
+  font-size: 28px;
+  text-align: left;
+  padding-bottom: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.mailing-list-container {
+  width: 70vw;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+  border: 8px solid #AC3737;
+  text-align: center;
+}
+
+.newsletter-form {
+  display: flex;
+  justify-content: center;
+  max-width: 500px;  /* Increase the max-width if you want a longer input */
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.mailing-list-input {
+  flex: 3;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-right: none; /* Removes right border so button blends in */
+  border-radius: 30px 0 0 30px;
+  font-size: 16px;
+  outline: none;
+}
+
+.mailing-list-button {
+  padding: 3px 25px;
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  border-radius: 0 30px 30px 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: 'inknut antiqua', sans-serif;
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.footer-logo-copyright {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-copyright {
+  font-size: small;
+}
+
+.footer-links {
+  display: flex;
+  gap: 70px; 
+  font-size: small;
+}
+
+.footer-links a {
+  color: black;
+  text-decoration: none; 
+  font-family: "'inknut antiqua', sans-serif";
+  font-size: 16px; 
+  margin: 5px 0;
+}
+

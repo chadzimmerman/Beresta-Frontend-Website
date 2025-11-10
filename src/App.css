@@ -1,17 +1,34 @@
+/* --- Global & Base Styles (Default: Mobile-First) --- */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
 }
+
 body {
   font-family: 'inknut antiqua', sans-serif;
   background-color: #FFFFFF;
+  /* Ensure a minimum width for mobile devices */
+  min-width: 320px; 
+}
+
+.app-page-wrapper {
+  /* This wrapper must surround AltHeader, CategoryPageContainer, and Footer */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
   background-color: #ECF1F5; 
+  padding: 10px 20px; /* Add some padding for mobile */
 }
 
 .header-name {
-  font-size: medium;
+  font-size: large; /* Slightly larger on mobile for visibility */
   color: black;
 }
 
@@ -25,23 +42,34 @@ body {
 .banner-image {
   width: 100%;
   height: auto;
-  max-height: 400px;
+  max-height: 250px; /* Reduce max height for mobile */
   object-fit: cover;
+}
+
+/* 1. CAROUSEL STYLING (Mobile Focus) */
+.carousel-section-wrapper {
+  max-width: 1400px; /* Limit max width for centering */
+  margin: 0 auto; /* Center the entire carousel section */
 }
 
 .carousel-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 40px 20px;
+  /* Use a consistent, generous padding */
+  padding: 40px 20px; 
   gap: 20px;
 }
 
 .trending-title {
   font-size: 30px;
-  padding-left: 15vw;
+  /* Centering on all screens by default */
+  text-align: center; 
+  padding-left: 0; 
+  width: 100%; 
+  margin-bottom: 20px; 
 }
 
+/* Ensure the carousel track itself fills the available space */
 .carousel {
   display: flex;
   overflow: hidden;
@@ -50,22 +78,33 @@ body {
 }
 
 .carousel-item {
-  flex: 0 0 18%;
+  flex: 0 0 18%; /* Desktop default */
   text-align: center;
   margin: 0 10px;
 }
 
 .carousel img {
-  width: 100%; /* Make images responsive */
+  width: 100%; 
   height: auto;
   max-width: 100%;
+  display: block; 
 }
 
+/* Arrow Button Styling */
 .arrow-button {
-  background-color: transparent;
-  border: none;
-  font-size: 30px;
+  background-color: transparent; 
+  border: none; 
+  color: black; 
+  font-size: 40px; 
   cursor: pointer;
+  padding: 0 10px; 
+  flex-shrink: 0; 
+  display: block; /* Desktop default */
+  transition: opacity 0.2s;
+}
+
+.arrow-button:hover {
+  opacity: 0.7;
 }
 
 .left {
@@ -76,92 +115,108 @@ body {
   margin-left: 10px;
 }
 
+/* 2. ABOUT US STYLING (Mobile Focus) */
 .about-us-container {
   background-color: #D8DBE1;
-  width: 80vw;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin: 0 auto;
-  margin-bottom: 200px;
-  max-width: "800px";
+  width: 90vw; /* Take up more width on mobile */
+  padding: 20px 10px;
+  margin: 40px auto; /* Reduced margin */
+  max-width: 800px;
 }
 
 .about-us-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-size: 28px;
 }
 
 .about-us-paragraph {
-  font-size: 28px;
-  text-align: left;
-  padding-bottom: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
+  font-size: 16px; 
+  text-align: center; 
+  padding: 0 10px; 
 }
 
+/* 3. MAILING LIST STYLING (Mobile Focus) */
 .mailing-list-container {
-  width: 70vw;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin: 0 auto;
-  margin-bottom: 100px;
-  border: 8px solid #AC3737;
+  width: 90vw;
+  padding: 20px 10px;
+  margin: 0 auto 50px auto;
+  border: 4px solid #AC3737; 
   text-align: center;
 }
 
 .newsletter-form {
   display: flex;
-  justify-content: center;
-  max-width: 500px;  /* Increase the max-width if you want a longer input */
-  margin: 0 auto;
-  margin-bottom: 40px;
+  flex-direction: column; /* Stack input and button on mobile */
+  max-width: 400px;
+  margin: 0 auto 20px auto;
 }
 
 .mailing-list-input {
-  flex: 3;
-  padding: 15px;
+  flex: none; 
+  width: 100%;
+  padding: 12px;
   border: 2px solid #ccc;
-  border-right: none; /* Removes right border so button blends in */
-  border-radius: 30px 0 0 30px;
+  border-radius: 30px; 
+  margin-bottom: 10px; 
   font-size: 16px;
   outline: none;
+  border-right: 2px solid #ccc; 
 }
 
 .mailing-list-button {
-  padding: 3px 25px;
+  flex: none; 
+  width: 100%;
+  padding: 12px 25px;
   background-color: black;
   color: white;
   border: 2px solid black;
-  border-radius: 0 30px 30px 0;
+  border-radius: 30px; 
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s;
   font-family: 'inknut antiqua', sans-serif;
-  flex: 1;
 }
 
+/* 4. FOOTER STYLING (Mobile Focus - Default) */
 .footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 70px;
-  padding-right: 70px;
+  flex-direction: column; /* Stacks items vertically on mobile */
+  align-items: center; /* Centers items horizontally */
+  text-align: center;
+  padding: 20px 10px;
+  background-color: #ECF1F5; 
+  width: 100%;
 }
 
 .footer-logo-copyright {
   display: flex;
+  flex-direction: column; /* Stacks logo and copyright */
+  gap: 5px; 
+  margin-bottom: 20px; 
   align-items: center;
-  gap: 20px;
+}
+
+.footer-logo {
+  font-size: large; 
+  cursor: pointer;
+  margin: 0;
+  font-family: 'inknut antiqua', sans-serif;
+  color: black;
 }
 
 .footer-copyright {
   font-size: small;
+  margin: 0;
 }
 
 .footer-links {
   display: flex;
-  gap: 70px; 
-  font-size: small;
+  flex-direction: column; /* Stacks links vertically */
+  gap: 10px; 
+  font-size: medium;
+  margin-bottom: 0;
+  text-decoration: none;
 }
 
 .footer-links a {
@@ -169,5 +224,637 @@ body {
   text-decoration: none; 
   font-family: "'inknut antiqua', sans-serif";
   font-size: 16px; 
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: #AC3737; 
+}
+
+/* --- Media Query for Mobile (Less than 768px) --- */
+
+@media (max-width: 767px) {
+
+  .nav-list .language-toggle-wrapper {
+      /* Ensure the whole LI takes full width for easy tapping */
+      width: 100%; 
+  }
+
+  .nav-list .language-toggle-wrapper > * {
+    /* Use a large size for readability and tapping (matching other mobile links) */
+    font-size: 20px !important; 
+    
+    /* Ensure it aligns with the other stacked links in the mobile menu */
+    width: 100%; 
+    text-align: left; 
+    
+    /* Ensure font is correct, though it should inherit from the desktop fix */
+    font-family: 'inknut antiqua', sans-serif !important;
+  }
+  
+  /* Carousel (Mobile) */
+  .arrow-button {
+    display: block; 
+    font-size: 50px; 
+    flex-shrink: 0;
+    padding: 0 5px;
+  }
+  
+  .carousel-container {
+    padding: 20px 0; 
+    gap: 0; 
+    justify-content: flex-start;
+  }
+  
+  .carousel {
+    overflow-x: scroll; 
+    padding-bottom: 10px; 
+    gap: 15px; 
+    width: auto; 
+  }
+
+  .carousel-item {
+    flex: 0 0 60%; /* Show 1.5 items */
+    margin: 0 10px; 
+  }
+
+  .trending-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+}
+
+/* --- Media Query for Tablets/Desktops (iPad/Medium Screens: 768px and up) --- */
+
+@media (min-width: 768px) {
+  .banner-image {
+    max-height: 350px;
+  }
+
+  .nav-list .language-toggle-wrapper {
+      /* Ensure the whole LI takes full width for easy tapping */
+      width: 100%; 
+  }
+
+  .nav-list .language-toggle-wrapper > * {
+    /* Use a large size for readability and tapping (matching other mobile links) */
+    font-size: 15px !important; 
+    
+    /* Ensure it aligns with the other stacked links in the mobile menu */
+    width: 100%; 
+    text-align: left; 
+    
+    /* Ensure font is correct, though it should inherit from the desktop fix */
+    font-family: 'inknut antiqua', sans-serif !important;
+  }
+  
+  /* Carousel (Tablet) */
+  .carousel-container {
+    padding: 30px 20px;
+    gap: 15px;
+  }
+  .trending-title {
+    font-size: 28px;
+    padding-left: 0; /* Ensures centering */
+    text-align: center;
+    margin-bottom: 0;
+  }
+  .carousel {
+    overflow-x: hidden; 
+  }
+  .carousel-item {
+    flex: 0 0 28%; /* Show approximately 3 items */
+    margin: 0 5px;
+  }
+  .arrow-button {
+    display: block; 
+    font-size: 40px;
+  }
+
+  /* About Us (Tablet) */
+  .about-us-container {
+    width: 85vw;
+    margin-bottom: 100px;
+  }
+  .about-us-paragraph {
+    font-size: 20px;
+    padding: 0 30px;
+    text-align: left;
+  }
+
+  /* Mailing List (Tablet) */
+  .mailing-list-container {
+    width: 75vw;
+    padding: 30px 20px;
+  }
+  .newsletter-form {
+    flex-direction: row;
+  }
+  .mailing-list-input {
+    flex: 3;
+    border-radius: 30px 0 0 30px;
+    border-right: none; 
+    margin-bottom: 0;
+  }
+  .mailing-list-button {
+    flex: 1;
+    border-radius: 0 30px 30px 0;
+    padding: 15px 25px;
+  }
+
+  /* 🚨 FOOTER FIX (Tablet/Desktop: Side-by-side layout) 🚨 */
+  .footer {
+    flex-direction: row; /* Switches to horizontal layout */
+    justify-content: space-between; /* Pushes groups to the left and right */
+    align-items: center;
+    padding: 30px 40px;
+  }
+  
+  .footer-logo-copyright {
+    flex-direction: row; /* Logo and copyright are side-by-side */
+    gap: 20px;
+    margin-bottom: 0;
+  }
+
+  .footer-logo {
+    font-size: 18px; 
+  }
+
+  .footer-copyright {
+    font-size: 12px; /* Making copyright smaller */
+  }
+  
+  .footer-links {
+    flex-direction: row; /* Links are side-by-side horizontally */
+    gap: 40px; 
+    text-decoration: none;
+  }
+
+  .footer-links a {
+    font-size: 14px; 
+    font-family: 'inknut antiqua', sans-serif;
+  }
+}
+
+/* --- Media Query for Desktop (Large Screens: 1024px and up) --- */
+
+@media (min-width: 1024px) {
+  .banner-image {
+    max-height: 400px;
+  }
+
+  .language-toggle-wrapper > * {
+    font-family: 'inknut antiqua', sans-serif !important;
+    
+    /* Font size should now match other nav links (which were 14px in the 768px block) */
+    font-size: 14px !important; 
+    
+    color: black !important;
+    text-decoration: none !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important; /* Use padding 0 on the *element* itself */
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+  /* Carousel (Desktop) */
+  .carousel-container {
+    padding: 40px 20px;
+    gap: 20px;
+  }
+  .trending-title {
+    font-size: 30px;
+    padding-left: 0;
+    text-align: center;
+  }
+  .carousel-item {
+    flex: 0 0 18%; /* Original 5 items across */
+    margin: 0 10px;
+  }
+
+  /* About Us (Desktop) */
+  .about-us-container {
+    width: 90vw;
+    max-width: 1400px;
+    margin-bottom: 200px;
+    padding: 40px;
+  }
+  .about-us-paragraph {
+    font-size: 28px;
+    padding: 0 40px;
+  }
+
+  /* Mailing List (Desktop) */
+  .mailing-list-container {
+    width: 70vw;
+    border: 8px solid #AC3737;
+    padding: 40px 20px;
+    margin-bottom: 100px;
+  }
+  .mailing-list-input {
+    padding: 15px;
+  }
+  .mailing-list-button {
+    padding: 3px 25px; 
+  }
+
+  /* Footer (Desktop - inherits side-by-side from 768px+) */
+  .footer {
+    padding-left: 70px;
+    padding-right: 70px;
+  }
+  .footer-links {
+    gap: 70px; 
+  }
+}
+
+/* 5. ABOUT PAGE STYLING (Mobile-First) */
+
+.about-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.about-container {
+  /* Mobile: Items stack vertically */
+  display: flex;
+  flex-direction: column; 
+  align-items: center; /* Center the content */
+  gap: 20px;
+  padding: 20px 20px;
+  width: 100%;
+  max-width: 1000px; /* Max width for the entire page content */
+  margin: 0 auto;
+  flex: 1;
+}
+
+.about-cover-image {
+  /* Mobile: Image takes full container width */
+  width: 100%;
+  max-width: 300px; /* Restrict max size on larger mobile/portrait tablet */
+  height: auto;
+  margin-top: 0;
+}
+
+.about-content-column {
+  /* Mobile: Content takes full width */
+  width: 100%; 
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-family: 'inknut antiqua', sans-serif;
+  margin-top: 0;
+}
+
+.about-title-section {
+  margin: 0;
+  padding-top: 0;
+}
+
+.about-main-title {
+  font-size: 28px;
+  margin: 0 0 10px 0;
+  line-height: 1;
+}
+
+.about-section-title {
+  font-size: 20px;
+  margin: 20px 0 10px 0;
+}
+
+.about-section-text {
+  font-size: 16px;
   margin: 5px 0;
+  color: #000000;
+  text-align: left; /* Ensure text is left-aligned on mobile */
+}
+
+/* --- Media Query for Tablets/Desktops (iPad/Medium Screens: 768px and up) --- */
+
+@media (min-width: 768px) {
+  /* ... existing styles ... */
+
+  /* About Page Desktop Layout */
+  .about-container {
+    /* Switch to side-by-side layout */
+    flex-direction: row; 
+    align-items: flex-start; /* Image and text align at the top */
+    padding: 40px 40px; 
+    gap: 30px; /* Increase gap between image and text */
+  }
+
+  .about-cover-image {
+    /* Set a fixed size for desktop image */
+    width: auto;
+    max-width: 300px; 
+    /* The max-width of 300px is now the primary width constraint */
+  }
+  
+  .about-content-column {
+    /* Let the content fill the remaining space */
+    flex: 1; 
+  }
+
+  .about-section-text {
+    /* Larger text size for desktop readability */
+    font-size: 18px; 
+  }
+}
+
+/* 6. CATEGORY PAGE STYLING (Mobile-First) */
+
+.category-page-container {
+  
+  /* Restricts the width of the main content grid */
+  width: 100%; 
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.category-content-and-stretch {
+  /* 🚨 CRITICAL: This is the element that pushes the footer down 🚨 */
+  flex: 1; 
+  width: 100%;
+}
+
+.category-title { 
+  font-size: 24px; /* Smaller title on mobile */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.category-grid {
+  /* Mobile: Show 2 columns (minmax(150px, 1fr)) */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px; /* Tighter gap on mobile */
+}
+
+.category-card { 
+  cursor: pointer; 
+  text-align: center; 
+}
+
+.category-cover-image { 
+  width: 100%; 
+  height: auto; 
+}
+
+.category-book-title { 
+  margin: 8px 0 3px 0; 
+  font-size: 14px; /* Smaller font on mobile */
+}
+
+.category-author { 
+  margin: 0; 
+  font-size: 12px; 
+  color: #555; 
+}
+
+@media (min-width: 768px) {
+  /* ... existing styles ... */
+
+  /* Category Page Tablet Layout */
+  .category-page-container {
+    padding: 30px 20px; 
+  }
+
+  .category-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: left; /* Align title left on desktop/tablet */
+  }
+
+  .category-grid {
+    /* Tablet: Show 3-4 columns */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  
+  .category-book-title { 
+    font-size: 16px; 
+  }
+
+  .category-author { 
+    font-size: 14px; 
+  }
+}
+
+/* --- Media Query for Desktop (Large Screens: 1024px and up) --- */
+
+@media (min-width: 1024px) {
+  /* ... existing styles ... */
+
+  /* Category Page Desktop Layout */
+  .category-page-container {
+    max-width: 1400px; /* Wider content area for large screens */
+     /* Add more padding on the sides */
+  }
+
+  .category-grid {
+    /* Desktop: Use your original 200px minimum width (4-6 columns) */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px; 
+  }
+
+  .category-title {
+    font-size: 32px;
+  }
+}
+
+/* 7. CART PAGE STYLING (Mobile-First) */
+
+/* Vertical Stretch Wrapper */
+.cart-content-and-stretch {
+  flex: 1; 
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Center the cart horizontally */
+  align-items: flex-start; /* Align content to the top */
+  padding: 20px 10px;
+}
+
+/* Horizontal Width Container */
+.shoppingCartContainer {
+  /* Mobile: Use most of the screen width */
+  width: 95%; 
+  max-width: 600px; /* Max width for cart content */
+  display: flex;
+  flex-direction: column;
+}
+
+.shoppingCartTitle {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.shoppingCartColumnHeads {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+  font-size: 14px;
+  /* On mobile, only show 2 columns */
+}
+
+/* Hide Quantity header on mobile */
+.shoppingCartColumnHeads .quantity-header {
+  display: none; 
+}
+
+.shoppingCartItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: grid;
+  /* Use CSS Grid for better alignment on mobile (Title, Qty/Buttons, Price) */
+  grid-template-columns: 3fr 2fr 1.5fr; 
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.title-column {
+  /* Title column takes 3 parts of the grid */
+  text-align: left;
+}
+
+.quantity-column {
+  /* Quantity column takes 2 parts of the grid */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-button {
+  background: none;
+  border: 1px solid #AC3737;
+  color: #AC3737;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.price-column {
+  /* Price column takes 1.5 parts of the grid */
+  text-align: right;
+  font-weight: bold;
+}
+
+.shoppingCartSubtotals {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.subtotal, .shipping {
+  margin: 2px 0;
+}
+
+.totals {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
+}
+
+.total-label {
+  font-size: 20px;
+  margin: 0;
+}
+
+.total-amount {
+  font-size: 20px;
+  margin: 0;
+  color: #AC3737;
+}
+
+.checkoutButton {
+  width: 100%;
+  background-color: #AC3737;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'inknut antiqua', sans-serif;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.checkoutButton:hover {
+    background-color: #8c2a2a;
+}
+
+/* --- Media Query for Tablets/Desktops (iPad/Medium Screens: 768px and up) --- */
+
+@media (min-width: 768px) {
+  /* ... existing styles ... */
+
+  /* Cart Page Desktop Layout */
+  .shoppingCartTitle {
+    text-align: left;
+    font-size: 32px;
+  }
+  
+  .shoppingCartColumnHeads {
+    font-size: 16px;
+    padding: 0;
+  }
+
+  /* Show Quantity header on Tablet/Desktop */
+  .shoppingCartColumnHeads .quantity-header {
+    display: block; 
+    /* Adjust positioning to align over the quantity column */
+    width: 20%; 
+    text-align: center;
+  }
+
+  /* Item row layout */
+  .item {
+    /* Revert to Flexbox for simpler column control */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding: 0 5px;
+  }
+
+  .title-column {
+    width: 50%;
+  }
+
+  .quantity-column {
+    width: 20%;
+  }
+
+  .price-column {
+    width: 30%;
+  }
+
+  .totals {
+    justify-content: flex-end;
+    gap: 40px;
+  }
 }

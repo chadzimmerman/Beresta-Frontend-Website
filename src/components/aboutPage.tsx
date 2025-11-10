@@ -2,31 +2,47 @@ import React from "react";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
 import { useTranslation } from "react-i18next";
+// Assuming you'll import a dedicated image or just use the URL
+// import chadSvetlanaPhoto from "../assets/chad-and-svetlana-photo.jpg";
 
 function AboutPage() {
   const { t } = useTranslation();
   return (
-    <div style={styles.page}>
+    <div className="about-page">
+      {" "}
+      {/* Wrapper for minHeight: 100vh */}
       <AltHeader />
-      <div style={styles.container}>
+      <div className="about-container">
+        {" "}
+        {/* Replaces styles.container */}
         <img
           src="http://localhost:3000/assets/chad-and-svetlana-photo.jpg"
           alt="Chad and Svetlana Zimmerman"
-          style={styles.cover}
+          className="about-cover-image"
         />
-        <div style={styles.rightColumn}>
-          <div style={styles.titleSection}>
-            <h1 style={styles.title}>{t("aboutUs.mainTitle")}</h1>
-            <h3 style={styles.sectionTitle}>{t("aboutUs.ourJourneyTitle")}</h3>
-            <p style={styles.text}>{t("aboutUs.ourJourney")}</p>
+        <div className="about-content-column">
+          {" "}
+          {/* Replaces styles.rightColumn */}
+          <div className="about-title-section">
+            <h1 className="about-main-title">{t("aboutUs.mainTitle")}</h1>
+
+            {/* Our Journey Section */}
+            <h3 className="about-section-title">
+              {t("aboutUs.ourJourneyTitle")}
+            </h3>
+            <p className="about-section-text">{t("aboutUs.ourJourney")}</p>
+
             {/* Chad Section */}
-            <h3 style={styles.sectionTitle}>{t("aboutUs.aboutChadTitle")}</h3>
-            <p style={styles.text}>{t("aboutUs.aboutChad")}</p>
+            <h3 className="about-section-title">
+              {t("aboutUs.aboutChadTitle")}
+            </h3>
+            <p className="about-section-text">{t("aboutUs.aboutChad")}</p>
+
             {/* Svetlana Section */}
-            <h3 style={styles.sectionTitle}>
+            <h3 className="about-section-title">
               {t("aboutUs.aboutSvetlanaTitle")}
             </h3>
-            <p style={styles.text}>{t("aboutUs.aboutSvetlana")}</p>
+            <p className="about-section-text">{t("aboutUs.aboutSvetlana")}</p>
           </div>
         </div>
       </div>
@@ -35,52 +51,6 @@ function AboutPage() {
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
-  page: {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-  },
-  container: {
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "20px",
-    padding: "0 20px 20px 20px",
-    maxWidth: "1000px",
-    margin: "0 auto",
-    flex: 1,
-  },
-  cover: {
-    maxWidth: "300px",
-    height: "auto",
-    marginTop: 0,
-  },
-  rightColumn: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    fontFamily: "'inknut antiqua', sans-serif",
-    marginTop: 0,
-  },
-  titleSection: {
-    margin: 0,
-    paddingTop: 0,
-  },
-  title: {
-    fontSize: "28px",
-    margin: "0 0 10px 0",
-    lineHeight: 1,
-  },
-  text: {
-    fontSize: "16px",
-    margin: "5px 0",
-    color: "#000000", // Black for body text
-  },
-  sectionTitle: {
-    fontSize: "20px",
-    margin: "20px 0 10px 0", // More space above sections
-  },
-};
+// 🚨 REMOVE the 'styles' object entirely, as it will be replaced by CSS in app.css 🚨
 
 export default AboutPage;

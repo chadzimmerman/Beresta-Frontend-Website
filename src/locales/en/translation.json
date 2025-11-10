@@ -1,8 +1,8 @@
 {
     "header": {
       "categories": "Categories",
-      "aboutUs": "About Us",
-      "contactUs": "Contact Us",
+      "aboutUs": "About",
+      "contactUs": "Contact",
       "cart": "Cart",
       "searchBar": "Search books..."
     },
@@ -26,17 +26,21 @@
       "email": "Email",
       "phone": "Phone Number",
       "message": "Your Message",
-      "submit": "Send"
+      "submit": "Send",
+      "networkError": "Network Error, please try again later."
     },
     "newsletter": {
       "title": "Get a free eBook when you sign up for our mailing list!",
       "description": "Plus, receive recommendations and exclusive offers on all of your favorite books from Beresta Literary Press.",
-      "submit": "Sign Me Up"
+      "submit": "Sign Up",
+      "placeholder": "john@gmail.com",
+      "networkError": "Network Error, please try again later.",
+      "successMessage": "Thank you! Check your inbox for the free eBook."
     },
     "footer": {
       "home": "Home",
-      "aboutUs": "About Us",
-      "contactUs": "Contact Us",
+      "aboutUs": "About",
+      "contactUs": "Contact",
       "ourBooks": "Our Books"
     },
     "loading": "Loading...",
@@ -53,5 +57,10 @@
       "free": "Free",
       "total": "Total",
       "checkoutWithStripe": "Checkout with Stripe"
+    },
+      "successPage": {
+      "thankYou": "Thank you for your purchase!",
+      "orderProcessed": "Your order has been successfully processed.",
+      "nextSteps": "You will receive an email confirmation shortly."
     }
   }

@@ -1,160 +1,122 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import "./contact.css";
 
-function ContactUs() {
+function Contact() {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     message: "",
   });
 
-  const [successMessage, setSuccessMessage] = useState(""); // <-- new state
+  // State for feedback and submission status
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
+    setMessage(""); // Clear previous messages
+    setIsSubmitting(true);
+
+    // --- 🚨 START API Submission Logic 🚨 ---
     try {
-      const response = await fetch("http://localhost:3000/api/send-email", {
+      const response = await fetch("/api/contact", {
+        // Target your new serverless function
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData), // Send all form data
       });
-      const data = await response.json();
-      if (data.success) {
-        setSuccessMessage("Thank you! Your message has been sent.");
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          message: "",
-        });
+
+      if (response.ok) {
+        // Success: Clear form and show success message
+        setMessage(t("contactUs.successMessage")); // e.g., "Your message has been sent!"
+        setFormData({ fullName: "", email: "", phoneNumber: "", message: "" });
       } else {
-        setSuccessMessage("");
-        alert("Failed to send email.");
+        // Error: Show error message from server
+        const errorData = await response.json();
+        setMessage(errorData.message || t("contactUs.genericError"));
       }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to send email.");
+    } catch (error) {
+      // Network failure
+      console.error("Submission error:", error);
+      setMessage(t("contactUs.networkError"));
+    } finally {
+      setIsSubmitting(false);
     }
+    // --- 🚨 END API Submission Logic 🚨 ---
   };
 
   return (
-    <form id="contact" style={styles.form} onSubmit={handleSubmit}>
-      <h1 style={styles.contactHeader}>{t("contactUs.title")}</h1>
-      <input
-        name="fullName"
-        value={formData.fullName}
-        onChange={handleChange}
-        type="text"
-        placeholder={t("contactUs.fullName")}
-        style={styles.fullName}
-      />
+    <div id="contact" className="contact-us-container">
+      <h2 className="contact-us-header">{t("contactUs.title")}</h2>
+      <form className="contact-form" onSubmit={handleSubmit}>
+        {/* ... (input fields remain the same) ... */}
 
-      <div style={styles.row}>
         <input
-          name="email"
-          value={formData.email}
+          type="text"
+          name="fullName"
+          placeholder={t("contactUs.fullName")}
+          className="form-input full-width-input"
+          value={formData.fullName}
           onChange={handleChange}
-          type="email"
-          placeholder={t("contactUs.email")}
-          style={styles.email}
+          required // Added required attribute
         />
-        <input
-          name="phone"
-          value={formData.phone}
+        {/* ... (inline fields wrapper) ... */}
+        <div className="inline-fields-wrapper">
+          <input
+            type="email"
+            name="email"
+            placeholder={t("contactUs.email")}
+            className="form-input inline-field-item"
+            value={formData.email}
+            onChange={handleChange}
+            required // Added required attribute
+          />
+          <input
+            type="tel"
+            name="phoneNumber"
+            placeholder={t("contactUs.phone")}
+            className="form-input inline-field-item"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+          />
+        </div>
+        {/* ... (message field) ... */}
+        <textarea
+          name="message"
+          placeholder={t("contactUs.message")}
+          className="form-textarea full-width-input"
+          value={formData.message}
           onChange={handleChange}
-          type="tel"
-          placeholder={t("contactUs.phone")}
-          style={styles.phone}
+          required // Added required attribute
         />
-      </div>
 
-      <textarea
-        name="message"
-        value={formData.message}
-        onChange={handleChange}
-        placeholder={t("contactUs.message")}
-        style={styles.message}
-      />
+        <button
+          type="submit"
+          className="form-submit-button"
+          disabled={isSubmitting} // Disable during submission
+        >
+          {isSubmitting ? t("contactUs.submitting") : t("contactUs.submit")}
+        </button>
+      </form>
 
-      <button type="submit" style={styles.submitButton}>
-        {t("contactUs.submit")}
-      </button>
-
-      {successMessage && (
-        <p style={{ color: "green", textAlign: "center", marginTop: "10px" }}>
-          {successMessage}
-        </p>
-      )}
-    </form>
+      {/* Display feedback message */}
+      {message && <p className="submission-message">{message}</p>}
+    </div>
   );
 }
 
-const styles: { [key: string]: React.CSSProperties } = {
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    width: "100%",
-    maxWidth: "500px",
-    margin: "0 auto",
-    paddingBottom: "200px",
-    paddingTop: "20px",
-  },
-  contactHeader: {
-    textAlign: "center",
-  },
-  fullName: {
-    width: "93.5%",
-    padding: "15px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-  },
-  row: {
-    display: "flex",
-    gap: "10px",
-    width: "100%",
-  },
-  email: {
-    flex: "1.5",
-    padding: "15px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-  },
-  phone: {
-    flex: "1",
-    padding: "15px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-  },
-  message: {
-    width: "93.5%",
-    height: "120px",
-    padding: "15px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
-    fontSize: "16px",
-    resize: "none",
-  },
-  submitButton: {
-    padding: "15px",
-    borderRadius: "10px",
-    border: "none",
-    backgroundColor: "#AC3737",
-    color: "white",
-    fontSize: "16px",
-    cursor: "pointer",
-  },
-};
-
-export default ContactUs;
+export default Contact;
