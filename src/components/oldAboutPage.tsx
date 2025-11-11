@@ -4,7 +4,7 @@ import Footer from "./footer";
 import { useTranslation } from "react-i18next";
 
 function AboutPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   return (
     <div style={styles.page}>
       <AltHeader />

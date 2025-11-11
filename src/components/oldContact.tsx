@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 function ContactUs() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",

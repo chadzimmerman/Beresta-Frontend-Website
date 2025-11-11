@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 // import chadSvetlanaPhoto from "../assets/chad-and-svetlana-photo.jpg";
 
 function AboutPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   return (
     <div className="about-page">
       {" "}

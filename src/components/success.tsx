@@ -2,11 +2,11 @@ import React, { useContext, useEffect } from "react";
 import { CartContext } from "../App";
 import Header from "./header";
 import Footer from "./footer";
-import { useTranslation, TFunction } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 function SuccessPage() {
   const { cart, setCart } = useContext(CartContext);
-  const { t } = useTranslation() as { t: TFunction<"translation", undefined> };
+  const { t } = useTranslation() as { t: (key: string) => string };
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 

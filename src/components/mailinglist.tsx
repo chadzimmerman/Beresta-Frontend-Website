@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 function MailingList() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
 
   // 1. State to manage the user's email input
   const [email, setEmail] = useState("");

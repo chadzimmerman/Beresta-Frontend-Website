@@ -10,7 +10,7 @@ interface Book {
 }
 
 function TrendingBooks() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   const [currentIndex, setCurrentIndex] = useState(0);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);

@@ -18,7 +18,7 @@ const categories = [
 ];
 
 function AltHeader() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();

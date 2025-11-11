@@ -3,7 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CartContext } from "../App";
 import Header from "./header";
 import Footer from "./footer";
-import { useTranslation, TFunction } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const stripePromise = loadStripe(
   "pk_test_51R6TITC2IqeseeFMzu45cabmU4kaW8RVIp1ZYt7Xo0v1KGuKHwflLSjkxVtk2YKQ8zgCRkdtehc1TFqHZvHowr9m00ZCjMWe3I"
@@ -12,7 +12,7 @@ console.log("loadStripe imported:", loadStripe);
 
 function CartPage() {
   const { cart, setCart } = useContext(CartContext);
-  const { t } = useTranslation() as { t: TFunction<"translation", undefined> };
+  const { t } = useTranslation() as { t: (key: string) => string };
   console.log("CartPage rendered, cart:", cart);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -52,7 +52,7 @@ function CartPage() {
       }
       const { id } = await response.json();
       console.log("Checkout session ID:", id);
-      await stripe.redirectToCheckout({ sessionId: id });
+      await stripe!.redirectToCheckout({ sessionId: id });
     } catch (error) {
       console.error("Checkout error:", error);
     }

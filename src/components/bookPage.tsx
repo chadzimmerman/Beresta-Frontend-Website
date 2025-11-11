@@ -32,7 +32,7 @@ const AMAZON_STORE =
   "https://www.amazon.com/stores/Chad-Michael-Zimmerman/author/B093YNBZX3?ref=sr_ntt_srch_lnk_3&qid=1759242462&sr=1-3&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=c0969932-854f-468b-a234-26f687fa5ebd";
 
 function BookPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
@@ -263,7 +263,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: "10px",
     marginTop: "15px",
     justifyContent: "center",
-    gap: "15px",
   },
   amazonButton: {
     flex: 1,

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 function Footer() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   const navigate = useNavigate();
 
   const goToHome = () => {

@@ -20,7 +20,7 @@ const categories = [
 ];
 
 function Header() {
-  const { t } = useTranslation();
+  const { t } = useTranslation() as { t: (key: string) => string };
   // State for mobile menu open/close
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");

@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import "./contact.css";
 
 function Contact() {
-  const { t } = useTranslation();
-
+  const { t } = useTranslation() as { t: (key: string) => string };
   return (
     <div id="contact" className="contact-us-container">
       <h2 className="contact-us-header">{t("contactUs.title")}</h2>
