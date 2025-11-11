@@ -128,6 +128,4 @@ function CartPage() {
   );
 }
 
-// 🚨 REMOVE the 'styles' object entirely 🚨
-
 export default CartPage;

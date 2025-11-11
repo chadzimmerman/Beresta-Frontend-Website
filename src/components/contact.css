@@ -29,12 +29,19 @@
   font-family: inherit; /* Use the body font */
 }
 
+.form-input:focus,
+.form-textarea:focus {
+    /* Added focus styles for better user experience */
+    border-color: #A34841; 
+    box-shadow: 0 0 0 2px rgba(163, 72, 65, 0.4);
+    outline: none;
+}
+
 .form-textarea {
   resize: vertical; /* Allow vertical resizing */
   min-height: 150px;
 }
 
-/* 🚨 Mobile: Inline fields are forced to stack by default */
 .inline-fields-wrapper {
   display: flex;
   flex-direction: column;
@@ -62,10 +69,40 @@
   background-color: #8c3e38;
 }
 
+.submission-success-message,
+.submission-error-message {
+  margin-top: 25px; /* Spacing from the form */
+  padding: 15px 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.submission-success-message {
+  background-color: #e6ffe6; /* Very light green */
+  color: #388e3c; /* Dark green text */
+  border-color: #388e3c;
+}
+
+.submission-error-message {
+  background-color: #ffe6e6; /* Very light red */
+  color: #d32f2f; /* Dark red text */
+  border-color: #d32f2f;
+}
+
+.ValidationError {
+  color: #d32f2f;
+  font-size: 14px;
+  margin-top: -10px; 
+  margin-bottom: 5px;
+  padding-left: 5px;
+}
+
 /* --- Media Query for Tablet/Desktop (600px and up) --- */
 @media (min-width: 600px) {
   
-  /* 🚨 Desktop/Tablet: Make Email and Phone side-by-side and equal width */
   .inline-fields-wrapper {
     flex-direction: row; /* Change to row layout */
     gap: 20px; /* Increased gap between fields */
