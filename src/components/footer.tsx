@@ -9,6 +9,12 @@ function Footer() {
   const goToHome = () => {
     navigate("/");
   };
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "auto", // scroll is instant, not smooth
+    });
+  };
   return (
     <footer className="footer">
       <div className="footer-logo-copyright">
@@ -18,8 +24,12 @@ function Footer() {
         <p className="footer-copyright">Copyright ©2025</p>
       </div>
       <nav className="footer-links">
-        <Link to="/">{t("footer.home")}</Link>
-        <Link to="/about">{t("footer.aboutUs")}</Link>
+        <Link to="/" onClick={scrollToTop}>
+          {t("footer.home")}
+        </Link>
+        <Link to="/about" onClick={scrollToTop}>
+          {t("footer.aboutUs")}
+        </Link>
         <a href="/#contact">{t("footer.contactUs")}</a>
       </nav>
     </footer>
