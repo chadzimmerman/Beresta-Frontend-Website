@@ -62,5 +62,9 @@
       "thankYou": "Thank you for your purchase!",
       "orderProcessed": "Your order has been successfully processed.",
       "nextSteps": "You will receive an email confirmation shortly."
+    },
+    "bookPage": {
+      "purchaseOnAmazon": "Purchase on Amazon",
+      "purchaseAutographedCopy": "Purchase Autographed Copy"
     }
   }

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { inherits } from "util";
 
 function LanguageToggle() {
   const { i18n } = useTranslation();
@@ -10,19 +11,8 @@ function LanguageToggle() {
   };
 
   return (
-    <button
-      onClick={toggleLanguage}
-      style={{
-        padding: "5px 10px",
-        fontSize: "12px",
-        fontFamily: "'inknut antiqua', sans-serif", // Matches your header
-        color: "black",
-        border: "none",
-        background: "none",
-        cursor: "pointer",
-      }}
-    >
-      {i18n.language === "en" ? "Русский" : "English"}{" "}
+    <button onClick={toggleLanguage} className="language-toggle">
+      {i18n.language === "en" ? "Russian" : "Англиский"}{" "}
       {/* Shows opposite language */}
     </button>
   );

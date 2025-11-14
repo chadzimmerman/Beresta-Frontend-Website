@@ -45,12 +45,23 @@
   position: relative;
 }
 
+.language-toggle {
+  padding: 5px 10px;
+  font-size: 12px;
+  color: black;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit; /* Let .lang-ru or .lang-en determine it */
+
+}
+
 /* Category Trigger Button */
 .nav-trigger {
   color: black;
   text-decoration: none;
   font-size: 14px;
-  font-family: 'inknut antiqua', sans-serif;
+  font-family: inherit;
   background: none;
   border: none;
   padding: 5px 10px;
@@ -125,6 +136,40 @@
     display: none; 
 }
 
+/* search drop down styling */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.suggestion-item:hover {
+  background: #f2f2f2;
+}
+
+.suggestion-title {
+  font-weight: 500;
+}
+
+.suggestion-author {
+  color: #555;
+  font-style: italic;
+  margin-left: 4px;
+}
+
 /* --- Media Query for Tablets (768px and up) --- */
 @media (min-width: 768px) and (max-width: 1023px) {
     .logo-image {
@@ -175,19 +220,11 @@
     border: none;
     outline: none;
     margin: 0; 
-    
     /* Ensure the button text aligns perfectly with the links */
     text-align: left; 
-    
     /* Ensure it takes full width of the mobile list item */
     width: 100%; 
-    
-    /* Match the padding/size of the other links (e.g., 24px font) */
-    font-size: 18px;
     padding: 10px 0; /* Match the vertical padding of the language toggle */
-    
-    /* Ensure the font is consistent */
-    font-family: 'inknut antiqua', sans-serif;
     color: black;
   }
 
@@ -274,5 +311,29 @@
     }
     .search-input:focus {
         width: 90%;
+    }
+
+    .nav-main.is-open .search-suggestions {
+        /* Remove desktop positioning that anchors it to the top */
+        position: static; 
+        
+        /* Make it flow naturally within the nav-item */
+        margin-top: 5px; 
+        width: 90%; /* Match the search input width */
+        margin-left: 5%; /* Match the search input margin */
+        
+        /* Enable scrolling within the suggestions box itself */
+        max-height: 150px; 
+        overflow-y: auto; 
+        
+        /* Fix border/shadow for in-flow presentation */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    }
+    
+    .nav-main.is-open .suggestion-item {
+        /* Adjust padding for stacked mobile dropdown */
+        padding: 8px 12px;
     }
 }

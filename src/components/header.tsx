@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import logo from "../assets/beresta-logo.png";
 import cartIcon from "../assets/shopping-cart-line.png";
 import LanguageToggle from "./LanguageToggle";
 import { Link, useNavigate } from "react-router-dom";
-// 🚨 New: Import the dedicated CSS file
 import "./header.css";
+import { CartContext } from "../App";
 
 const categories = [
   "Fiction",
@@ -21,6 +21,7 @@ const categories = [
 
 function Header() {
   const { t } = useTranslation() as { t: (key: string) => string };
+  const { searchQuery, setSearchQuery } = useContext(CartContext);
   // State for mobile menu open/close
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -29,6 +30,7 @@ function Header() {
 
   const goToHome = () => {
     navigate("/");
+    setSearchQuery("");
   };
 
   // Toggles for Category Dropdown and Mobile Menu
@@ -40,8 +42,51 @@ function Header() {
     setIsCategoryOpen(false);
     // Close the mobile menu after selecting a category
     if (isMenuOpen) setIsMenuOpen(false);
+    setSearchQuery("");
     navigate(`/category/${encodeURIComponent(category)}`);
   };
+
+  interface BookSuggestion {
+    id: number;
+    title: string;
+    authors: string;
+  }
+
+  const [suggestions, setSuggestions] = useState<BookSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Fetch suggestions when the user types in the search bar
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchQuery.trim().length < 2) {
+        setSuggestions([]);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/books/search?query=${encodeURIComponent(
+            searchQuery
+          )}`
+        );
+        const data = await res.json();
+        setSuggestions(data);
+        setShowSuggestions(true);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    const debounce = setTimeout(fetchSuggestions, 300); // debounce user typing
+    return () => clearTimeout(debounce);
+  }, [searchQuery]);
+
+  // closes search after a user clicks away or hits escape
+  useEffect(() => {
+    const handleClickOutside = () => setShowSuggestions(false);
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <header className="header-main">
@@ -105,7 +150,28 @@ function Header() {
               type="text"
               placeholder={t("header.searchBar")}
               className="search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
+            {/* drop down for the search bar */}
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className="search-suggestions">
+                {suggestions.map((book) => (
+                  <li
+                    key={book.id}
+                    className="suggestion-item"
+                    onClick={() => {
+                      setSearchQuery(book.title);
+                      setShowSuggestions(false);
+                      navigate(`/book/${book.id}`);
+                    }}
+                  >
+                    <span className="suggestion-title">{book.title}</span>
+                    <span className="suggestion-author"> — {book.authors}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
 
           <li className="nav-item">
@@ -123,7 +189,5 @@ function Header() {
     </header>
   );
 }
-
-// 🚨 Removed inline 'styles' object 🚨
 
 export default Header;

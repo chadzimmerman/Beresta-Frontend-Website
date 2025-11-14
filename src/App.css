@@ -4,6 +4,17 @@
   box-sizing: border-box;
 }
 
+/* Default English font */
+.lang-en {
+  font-family: 'inknut antiqua', serif;
+}
+
+/* Russian font */
+.lang-ru {
+  font-family: "EB Garamond", serif;
+  font-weight: 400;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -222,7 +233,6 @@ body {
 .footer-links a {
   color: black;
   text-decoration: none; 
-  font-family: "'inknut antiqua', sans-serif";
   font-size: 16px; 
   transition: color 0.3s;
 }
@@ -243,13 +253,11 @@ body {
   .nav-list .language-toggle-wrapper > * {
     /* Use a large size for readability and tapping (matching other mobile links) */
     font-size: 20px !important; 
-    
+    font-family: inherit;
     /* Ensure it aligns with the other stacked links in the mobile menu */
     width: 100%; 
     text-align: left; 
-    
-    /* Ensure font is correct, though it should inherit from the desktop fix */
-    font-family: 'inknut antiqua', sans-serif !important;
+
   }
   
   /* Carousel (Mobile) */
@@ -304,9 +312,6 @@ body {
     /* Ensure it aligns with the other stacked links in the mobile menu */
     width: 100%; 
     text-align: left; 
-    
-    /* Ensure font is correct, though it should inherit from the desktop fix */
-    font-family: 'inknut antiqua', sans-serif !important;
   }
   
   /* Carousel (Tablet) */
@@ -393,7 +398,7 @@ body {
 
   .footer-links a {
     font-size: 14px; 
-    font-family: 'inknut antiqua', sans-serif;
+    
   }
 }
 
@@ -405,7 +410,7 @@ body {
   }
 
   .language-toggle-wrapper > * {
-    font-family: 'inknut antiqua', sans-serif !important;
+    font-family: inherit !important;
     
     /* Font size should now match other nav links (which were 14px in the 768px block) */
     font-size: 14px !important; 
@@ -856,5 +861,66 @@ body {
   .totals {
     justify-content: flex-end;
     gap: 40px;
+  }
+}
+
+/* 8. BOOK PAGE STYLING (Mobile-First) */
+
+.book-page-container {
+  display: flex;
+  flex-direction: column; /* Mobile: stack image and text */
+  align-items: center;
+  gap: 20px;
+  padding: 20px 15px;
+  max-width: 1000px;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.book-cover-image {
+  width: 100%;
+  max-width: 250px; /* Keeps it nicely sized on phones */
+  height: auto;
+}
+
+.book-right-column {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  font-family: 'inknut antiqua', sans-serif;
+  text-align: left;
+}
+
+/* --- Tablet (iPad) --- */
+@media (min-width: 768px) {
+  .book-page-container {
+    flex-direction: row; /* Side-by-side layout */
+    align-items: flex-start;
+    gap: 30px;
+    padding: 40px 30px;
+  }
+
+  .book-cover-image {
+    width: auto;
+    max-width: 300px;
+  }
+
+  .book-right-column {
+    flex: 1;
+    padding-top: 0;
+  }
+}
+
+/* --- Desktop (Larger Screens) --- */
+@media (min-width: 1024px) {
+  .book-page-container {
+    max-width: 1000px;
+    padding: 40px;
+    gap: 40px;
+  }
+
+  .book-cover-image {
+    max-width: 350px;
   }
 }

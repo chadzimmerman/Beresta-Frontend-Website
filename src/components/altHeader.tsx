@@ -128,7 +128,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "black",
     textDecoration: "none",
     fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
+    fontFamily: "inherit",
     background: "none",
     border: "none",
     padding: "5px 10px",
@@ -138,7 +138,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "black",
     textDecoration: "none",
     fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
+    fontFamily: "inherit",
   },
   dropdown: {
     position: "absolute",
@@ -167,7 +167,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "black",
     textDecoration: "none",
     fontSize: "12px",
-    fontFamily: "'inknut antiqua', sans-serif",
+    fontFamily: "inherit",
   },
   cartIcon: {
     width: "20px",

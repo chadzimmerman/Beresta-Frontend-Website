@@ -26,8 +26,6 @@ interface Book {
   created_at?: string;
   amazon_link: string | null;
   cover_art_url: string;
-  is_autographed_available: boolean;
-  autographed_price?: number;
 }
 
 const AMAZON_STORE =
@@ -67,12 +65,12 @@ function BookPage() {
     if (!dateString) return "N/A";
     return dateString.slice(0, 10);
   };
-  const addToCart = (price?: number) => {
+  const addToCart = () => {
     if (!book) return;
     const newItem = {
       id: book.id,
       title: book.title,
-      price: Math.round((price ?? book.price) * 100), // use autographed price if provided
+      price: Math.round(Number(book.price) * 100), // "19.99" -> 1999
       quantity: 1,
     };
     setCart((prev) => {
@@ -96,14 +94,13 @@ function BookPage() {
   return (
     <div style={styles.page}>
       <AltHeader />
-      <div className="book-page-container" style={styles.container}>
+      <div style={styles.container}>
         <img
-          className="book-cover-image"
           src={`http://localhost:3000${book.cover_photo}`}
           alt={book.title}
           style={styles.cover}
         />
-        <div className="book-right-column" style={styles.rightColumn}>
+        <div style={styles.rightColumn}>
           {/* Title Section */}
           <div style={styles.titleSection}>
             <h1 style={styles.title}>{book.title}</h1>
@@ -129,41 +126,33 @@ function BookPage() {
               </div>
               <div style={styles.infoColumn}>
                 <p style={styles.infoLabel}>
-                  Page Count: <span style={styles.infoValue}>N/A</span>
+                  Pub Date:{" "}
+                  <span style={styles.infoValue}>
+                    {formatDate(book.published_date)}
+                  </span>
                 </p>
                 <p style={styles.infoLabel}>
-                  Autographed Price:{" "}
-                  <span style={styles.infoValue}>
-                    {book.autographed_price
-                      ? `$${Number(book.autographed_price).toFixed(2)}`
-                      : "N/A"}
-                  </span>
+                  Page Count: <span style={styles.infoValue}>N/A</span>
                 </p>
               </div>
             </div>
             <div style={styles.buttonContainer}>
-              {/* Amazon Button (always shows if link exists) */}
-              {book.amazon_link && (
-                <a
-                  href={book.amazon_link}
-                  style={styles.amazonButton}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("bookPage.purchaseOnAmazon")}
-                </a>
-              )}
-
-              {/* Autographed Copy Add-to-Cart Button */}
-              {book.is_autographed_available &&
-              book.autographed_price !== undefined ? (
-                <button
-                  style={styles.cartButton}
-                  onClick={() => addToCart(book.autographed_price)}
-                >
-                  {t("bookPage.purchaseAutographedCopy")}
-                </button>
-              ) : null}
+              <a
+                href={book.amazon_link ? book.amazon_link : AMAZON_STORE}
+                style={styles.amazonButton}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {book.amazon_link
+                  ? "Purchase on Amazon"
+                  : "See All Books on Amazon"}
+              </a>
+              <button style={styles.cartButton} onClick={addToCart}>
+                Add to Cart
+              </button>
+              {/* <Link to="/cart" className="go-to-cart-link">
+                <button>Go to Cart</button>
+              </Link> */}
             </div>
           </div>
 
@@ -214,7 +203,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
-    fontFamily: "inherit",
+    fontFamily: "'inknut antiqua', sans-serif",
     marginTop: 0,
   },
   // Title Section
@@ -274,20 +263,18 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: "10px",
     marginTop: "15px",
     justifyContent: "center",
-    fontFamily: "inherit",
   },
   amazonButton: {
     flex: 1,
     backgroundColor: "#AC3737",
     color: "white",
-    padding: "20px 20px",
+    padding: "1px 20px",
     textDecoration: "none",
     fontSize: "16px",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
     textAlign: "center",
-    fontFamily: "inherit",
   },
   cartButton: {
     flex: 1,
@@ -295,10 +282,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "white",
     padding: "1px 20px",
     fontSize: "16px",
-    fontFamily: "inherit",
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+    fontFamily: "'inknut antiqua', sans-serif",
   },
   // Bottom Section
   bottomSection: {
