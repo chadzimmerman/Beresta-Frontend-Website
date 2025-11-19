@@ -2,8 +2,6 @@ import React from "react";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
 import { useTranslation } from "react-i18next";
-// Assuming you'll import a dedicated image or just use the URL
-// import chadSvetlanaPhoto from "../assets/chad-and-svetlana-photo.jpg";
 
 function AboutPage() {
   const { t } = useTranslation() as { t: (key: string) => string };
@@ -14,15 +12,13 @@ function AboutPage() {
       <AltHeader />
       <div className="about-container">
         {" "}
-        {/* Replaces styles.container */}
         <img
-          src="http://localhost:3000/assets/chad-and-svetlana-photo.jpg"
+          src="assets/chad-and-svetlana-photo.jpg"
           alt="Chad and Svetlana Zimmerman"
           className="about-cover-image"
         />
         <div className="about-content-column">
           {" "}
-          {/* Replaces styles.rightColumn */}
           <div className="about-title-section">
             <h1 className="about-main-title">{t("aboutUs.mainTitle")}</h1>
 
@@ -50,7 +46,5 @@ function AboutPage() {
     </div>
   );
 }
-
-// 🚨 REMOVE the 'styles' object entirely, as it will be replaced by CSS in app.css 🚨
 
 export default AboutPage;

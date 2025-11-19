@@ -3,8 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
-// Import the dedicated CSS file if you have one, or ensure app.css is linked
-// import "./categoryPage.css";
 
 interface Book {
   id: number;
@@ -23,9 +21,9 @@ function CategoryPage() {
 
     axios
       .get(
-        `http://localhost:3000/api/books?category=${encodeURIComponent(
-          category
-        )}`
+        `${
+          process.env.REACT_APP_API_BASE_URL
+        }/api/books?category=${encodeURIComponent(category)}`
       )
       .then((res) => setBooks(res.data))
       .catch((err) => console.error(err));
@@ -38,18 +36,14 @@ function CategoryPage() {
   return (
     <div className="app-page-wrapper">
       <AltHeader />
-
-      {/* 🚨 FIX 2: Create a new wrapper for content that needs vertical stretch 🚨 */}
-
       <div className="category-content-and-stretch">
         <div className="category-page-container">
           <h1 className="category-title">{category}</h1>
-
           <div className="category-grid">
             {books.map((book) => (
               <div key={book.id} className="category-card">
                 <img
-                  src={`http://localhost:3000${book.cover_photo}`} // prepend backend URL
+                  src={book.cover_photo}
                   alt={book.title}
                   className="category-cover-image"
                   onClick={() => goToBook(book.id)}
@@ -63,7 +57,6 @@ function CategoryPage() {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

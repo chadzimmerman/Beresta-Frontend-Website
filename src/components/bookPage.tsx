@@ -45,7 +45,9 @@ function BookPage() {
     const fetchBook = async () => {
       console.log("Fetching book for id:", id);
       try {
-        const response = await fetch("http://localhost:3000/api/books"); // Fetch all books
+        const response = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/books`
+        ); // Fetch all books
         if (!response.ok)
           throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
@@ -99,7 +101,7 @@ function BookPage() {
       <div className="book-page-container" style={styles.container}>
         <img
           className="book-cover-image"
-          src={`http://localhost:3000${book.cover_photo}`}
+          src={book.cover_photo}
           alt={book.title}
           style={styles.cover}
         />

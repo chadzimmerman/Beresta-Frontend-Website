@@ -65,9 +65,9 @@ function Header() {
 
       try {
         const res = await fetch(
-          `http://localhost:3000/api/books/search?query=${encodeURIComponent(
-            searchQuery
-          )}`
+          `${
+            process.env.REACT_APP_API_BASE_URL
+          }/api/books/search?query=${encodeURIComponent(searchQuery)}`
         );
         const data = await res.json();
         setSuggestions(data);

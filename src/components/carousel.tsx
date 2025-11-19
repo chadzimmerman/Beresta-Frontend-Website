@@ -19,7 +19,9 @@ function TrendingBooks() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/books");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/books`
+        ); //changed from const response = await fetch("http://localhost:3000/api/books");
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -65,7 +67,7 @@ function TrendingBooks() {
                 <div className="carousel-item" key={index}>
                   <Link to={`/book/${book.id}`}>
                     <img
-                      src={`http://localhost:3000${book.cover_photo}`}
+                      src={book.cover_photo}
                       alt={book.title}
                       style={{
                         borderRadius: "5px",

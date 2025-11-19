@@ -40,11 +40,14 @@ function CartPage() {
       const stripe = await stripePromise;
       console.log("Stripe instance:", stripe);
       console.log("Cart sent to backend:", cart);
-      const response = await fetch("http://localhost:3000/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/checkout`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items: cart }),
+        }
+      );
       if (!response.ok) {
         throw new Error(
           `Server error: ${response.status} - ${await response.text()}`
