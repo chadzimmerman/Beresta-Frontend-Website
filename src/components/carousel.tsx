@@ -22,9 +22,6 @@ function TrendingBooks() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-  console.log("Supabase Key:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-
   // Fetch books from the backend when the component mounts
   // useEffect(() => {
   //   const fetchBooks = async () => {
