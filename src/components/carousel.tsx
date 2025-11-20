@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { createClient } from "@supabase/supabase-js";
 
 interface Book {
   id: number;
@@ -15,26 +16,45 @@ function TrendingBooks() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Create Supabase client using NEXT_PUBLIC env vars
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   // Fetch books from the backend when the component mounts
+  // useEffect(() => {
+  //   const fetchBooks = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API_BASE_URL}/api/books`
+  //       ); //changed from const response = await fetch("http://localhost:3000/api/books");
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       const data = await response.json();
+  //       console.log("Fetched books:", data);
+  //       setBooks(data);
+  //     } catch (error) {
+  //       console.error("Error fetching books:", error);
+  //     } finally {
+  //       setLoading(false); // Set loading to false after fetch
+  //     }
+  //   };
+  //   fetchBooks();
+  // }, []);
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/books`
-        ); //changed from const response = await fetch("http://localhost:3000/api/books");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Fetched books:", data);
-        setBooks(data);
+        const { data, error } = await supabase.from("books").select("*");
+        if (error) throw error;
+        setBooks(data ?? []);
       } catch (error) {
         console.error("Error fetching books:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetch
+        setLoading(false);
       }
     };
-
     fetchBooks();
   }, []);
 
