@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../../lib/supabaseClient";
 
 interface Book {
   id: number;
@@ -15,12 +16,6 @@ function TrendingBooks() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Create Supabase client using NEXT_PUBLIC env vars
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
 
   // Fetch books from the backend when the component mounts
   // useEffect(() => {
