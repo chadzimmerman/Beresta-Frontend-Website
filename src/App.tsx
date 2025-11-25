@@ -8,6 +8,8 @@ import CartPage from "./components/CartPage";
 import SuccessPage from "./components/success";
 import CategoryPage from "./components/categoryPage";
 import { useTranslation } from "react-i18next";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const CartContext = createContext<{
   cart: any[];
@@ -42,6 +44,15 @@ function App() {
       <CartContext.Provider
         value={{ cart, setCart, searchQuery, setSearchQuery }}
       >
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          pauseOnHover
+          draggable
+        />
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />

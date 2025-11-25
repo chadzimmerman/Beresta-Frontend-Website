@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { CartContext } from "../App";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
+import { toast } from "react-toastify";
 
 interface Book {
   id: number;
@@ -88,6 +89,7 @@ function BookPage() {
       }
       return [...prev, newItem];
     });
+    toast.success(`${book.title} added to cart!`);
   };
 
   console.log("Rendering - loading:", loading, "book:", book);
