@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CartContext } from "../App";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
 import { toast } from "react-toastify";
+import { supabase } from "../lib/supabaseClient";
 
 interface Book {
   id: number;
@@ -13,22 +14,14 @@ interface Book {
   authors: string;
   translators: string;
   price: number;
-  stock: number;
   description: string;
-  reviews: string | null;
   cover_photo: string;
   isbn: string;
-  categories: string;
-  copyright_date?: number;
-  published_date?: string;
   illustrators?: string;
-  back_art_url?: string | null;
-  inside_peek_url?: string | null;
-  created_at?: string;
   amazon_link: string | null;
-  cover_art_url: string;
   is_autographed_available: boolean;
   autographed_price?: number;
+  status: "available" | "upcoming";
 }
 
 const AMAZON_STORE =
@@ -39,25 +32,19 @@ function BookPage() {
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
-  const { cart, setCart } = useContext(CartContext);
-  console.log("BookPage CartContext:", { cart, setCart });
+  const { setCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchBook = async () => {
-      console.log("Fetching book for id:", id);
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/books`
-        ); // Fetch all books
-        if (!response.ok)
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        console.log("Fetched books:", data);
-        const foundBook = data.find((b: Book) => b.id === Number(id)); // Filter by ID
-        console.log("Found book:", foundBook);
-        setBook(foundBook || null);
+        const { data, error } = await supabase
+          .from("books")
+          .select("*")
+          .eq("id", Number(id))
+          .single();
+        if (error) throw error;
+        setBook(data);
       } catch (error) {
-        console.error("Error fetching books:", error);
         setBook(null);
       } finally {
         setLoading(false);
@@ -66,10 +53,22 @@ function BookPage() {
     fetchBook();
   }, [id]);
 
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    return dateString.slice(0, 10);
+  const [notifyEmail, setNotifyEmail] = useState("");
+  const [notifySubmitted, setNotifySubmitted] = useState(false);
+
+  const handleNotify = async () => {
+    if (!book || !notifyEmail) return;
+    const { error } = await supabase
+      .from("release_notifications")
+      .insert({ email: notifyEmail, book_id: book.id });
+    if (error && error.code !== "23505") {
+      toast.error("Something went wrong. Please try again.");
+    } else {
+      setNotifySubmitted(true);
+      toast.success("You'll be notified when this book is released!");
+    }
   };
+
   const addToCart = (price?: number) => {
     if (!book) return;
     const newItem = {
@@ -91,8 +90,6 @@ function BookPage() {
     });
     toast.success(`${book.title} added to cart!`);
   };
-
-  console.log("Rendering - loading:", loading, "book:", book);
 
   if (loading) return <p>{t("loading")}</p>;
   if (!book) return <p>{t("bookNotFound")}</p>;
@@ -120,65 +117,81 @@ function BookPage() {
 
           {/* Paperback Box */}
           <div style={styles.paperbackBox}>
-            <h2 style={styles.paperbackTitle}>Paperback</h2>
-            <div style={styles.infoContainer}>
-              <div style={styles.infoColumn}>
-                <p style={styles.infoLabel}>
-                  ISBN: <span style={styles.infoValue}>{book.isbn}</span>
+            {book.status === "upcoming" ? (
+              <>
+                <h2 style={styles.paperbackTitle}>Coming Soon</h2>
+                <p style={{ ...styles.text, marginBottom: "15px" }}>
+                  This title is not yet available. Enter your email below and
+                  we'll notify you when it releases.
                 </p>
-                <p style={styles.infoLabel}>
-                  List Price:{" "}
-                  <span style={styles.infoValue}>${book.price}</span>
-                </p>
-              </div>
-              <div style={styles.infoColumn}>
-                <p style={styles.infoLabel}>
-                  Page Count: <span style={styles.infoValue}>N/A</span>
-                </p>
-                <p style={styles.infoLabel}>
-                  Autographed Price:{" "}
-                  <span style={styles.infoValue}>
-                    {book.autographed_price
-                      ? `$${Number(book.autographed_price).toFixed(2)}`
-                      : "N/A"}
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div style={styles.buttonContainer}>
-              {/* Amazon Button (always shows if link exists) */}
-              {book.amazon_link && (
-                <a
-                  href={book.amazon_link}
-                  style={styles.amazonButton}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("bookPage.purchaseOnAmazon")}
-                </a>
-              )}
-
-              {/* Autographed Copy Add-to-Cart Button */}
-              {book.is_autographed_available &&
-              book.autographed_price !== undefined ? (
-                <button
-                  style={styles.cartButton}
-                  onClick={() => addToCart(book.autographed_price)}
-                >
-                  {t("bookPage.purchaseAutographedCopy")}
-                </button>
-              ) : null}
-            </div>
+                {notifySubmitted ? (
+                  <p style={{ color: "#AC3737", fontWeight: "bold" }}>
+                    ✓ You're on the list!
+                  </p>
+                ) : (
+                  <div style={styles.notifyForm}>
+                    <input
+                      type="email"
+                      placeholder="your@email.com"
+                      value={notifyEmail}
+                      onChange={(e) => setNotifyEmail(e.target.value)}
+                      style={styles.notifyInput}
+                    />
+                    <button onClick={handleNotify} style={styles.notifyButton}>
+                      Notify Me
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <h2 style={styles.paperbackTitle}>Paperback</h2>
+                <div style={styles.infoContainer}>
+                  <div style={styles.infoColumn}>
+                    <p style={styles.infoLabel}>
+                      ISBN: <span style={styles.infoValue}>{book.isbn}</span>
+                    </p>
+                    <p style={styles.infoLabel}>
+                      List Price:{" "}
+                      <span style={styles.infoValue}>${book.price}</span>
+                    </p>
+                  </div>
+                  <div style={styles.infoColumn}>
+                    <p style={styles.infoLabel}>
+                      Autographed Price:{" "}
+                      <span style={styles.infoValue}>
+                        {book.autographed_price
+                          ? `$${Number(book.autographed_price).toFixed(2)}`
+                          : "N/A"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div style={styles.buttonContainer}>
+                  <a
+                    href={book.amazon_link ?? AMAZON_STORE}
+                    style={styles.amazonButton}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t("bookPage.purchaseOnAmazon")}
+                  </a>
+                  {book.is_autographed_available &&
+                  book.autographed_price !== undefined ? (
+                    <button
+                      style={styles.cartButton}
+                      onClick={() => addToCart(book.autographed_price)}
+                    >
+                      {t("bookPage.purchaseAutographedCopy")}
+                    </button>
+                  ) : null}
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Reviews and Description */}
+          {/* Description */}
           <div style={styles.bottomSection}>
-            {book.reviews && (
-              <div style={styles.reviews}>
-                <h3 style={styles.sectionTitle}>Reviews</h3>
-                <p style={styles.text}>{book.reviews}</p>
-              </div>
-            )}
             {book.description && (
               <div style={styles.description}>
                 <h3 style={styles.sectionTitle}>Description</h3>
@@ -311,6 +324,29 @@ const styles: { [key: string]: React.CSSProperties } = {
   sectionTitle: {
     fontSize: "20px",
     margin: "0 0 10px 0",
+  },
+  notifyForm: {
+    display: "flex",
+    gap: "10px",
+    marginTop: "10px",
+  },
+  notifyInput: {
+    flex: 1,
+    padding: "10px",
+    fontSize: "16px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    fontFamily: "inherit",
+  },
+  notifyButton: {
+    backgroundColor: "#AC3737",
+    color: "white",
+    padding: "10px 20px",
+    fontSize: "16px",
+    fontFamily: "inherit",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
   },
 };
 

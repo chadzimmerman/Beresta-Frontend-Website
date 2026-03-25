@@ -6,14 +6,12 @@ import Footer from "./footer";
 import { useTranslation } from "react-i18next";
 
 const stripePromise = loadStripe(
-  "pk_test_51R6TITC2IqeseeFMzu45cabmU4kaW8RVIp1ZYt7Xo0v1KGuKHwflLSjkxVtk2YKQ8zgCRkdtehc1TFqHZvHowr9m00ZCjMWe3I"
+  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY!
 );
-console.log("loadStripe imported:", loadStripe);
 
 function CartPage() {
   const { cart, setCart } = useContext(CartContext);
   const { t } = useTranslation() as { t: (key: string) => string };
-  console.log("CartPage rendered, cart:", cart);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -38,8 +36,6 @@ function CartPage() {
   const handleCheckout = async () => {
     try {
       const stripe = await stripePromise;
-      console.log("Stripe instance:", stripe);
-      console.log("Cart sent to backend:", cart);
       const response = await fetch(
         `${process.env.REACT_APP_API_BASE_URL}/api/checkout`,
         {
@@ -54,7 +50,6 @@ function CartPage() {
         );
       }
       const { id } = await response.json();
-      console.log("Checkout session ID:", id);
       await stripe!.redirectToCheckout({ sessionId: id });
     } catch (error) {
       console.error("Checkout error:", error);

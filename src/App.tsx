@@ -8,7 +8,7 @@ import CartPage from "./components/CartPage";
 import SuccessPage from "./components/success";
 import CategoryPage from "./components/categoryPage";
 import { useTranslation } from "react-i18next";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const CartContext = createContext<{
@@ -25,8 +25,12 @@ export const CartContext = createContext<{
 
 function App() {
   const [cart, setCart] = useState<any[]>(() => {
-    const saved = localStorage.getItem("cart");
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem("cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,6 +65,7 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/success" element={<SuccessPage />} />
             <Route path="/category/:category" element={<CategoryPage />} />
+            <Route path="*" element={<Home />} />
           </Routes>
         </Router>
       </CartContext.Provider>
