@@ -6,6 +6,7 @@ import LanguageToggle from "./LanguageToggle";
 import { Link, useNavigate } from "react-router-dom";
 import "./header.css";
 import { CartContext } from "../App";
+import { supabase } from "../lib/supabaseClient";
 
 const categories = [
   "Fiction",
@@ -55,7 +56,7 @@ function Header() {
   const [suggestions, setSuggestions] = useState<BookSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Fetch suggestions when the user types in the search bar
+  // Fetch suggestions from Supabase when the user types in the search bar
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchQuery.trim().length < 2) {
@@ -63,21 +64,21 @@ function Header() {
         return;
       }
 
-      try {
-        const res = await fetch(
-          `${
-            process.env.REACT_APP_API_BASE_URL
-          }/api/books/search?query=${encodeURIComponent(searchQuery)}`
-        );
-        const data = await res.json();
+      const { data } = await supabase
+        .from("books")
+        .select("id, title, authors")
+        .or(
+          `title.ilike.%${searchQuery}%,authors.ilike.%${searchQuery}%`
+        )
+        .limit(6);
+
+      if (data) {
         setSuggestions(data);
         setShowSuggestions(true);
-      } catch (err) {
-        console.error(err);
       }
     };
 
-    const debounce = setTimeout(fetchSuggestions, 300); // debounce user typing
+    const debounce = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(debounce);
   }, [searchQuery]);
 
@@ -152,6 +153,12 @@ function Header() {
               className="search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && searchQuery.trim()) {
+                  setShowSuggestions(false);
+                  navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                }
+              }}
             />
             {/* drop down for the search bar */}
             {showSuggestions && suggestions.length > 0 && (
@@ -161,7 +168,6 @@ function Header() {
                     key={book.id}
                     className="suggestion-item"
                     onClick={() => {
-                      setSearchQuery(book.title);
                       setShowSuggestions(false);
                       navigate(`/book/${book.id}`);
                     }}
