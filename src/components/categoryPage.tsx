@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
+import { supabase } from "../lib/supabaseClient";
 
 interface Book {
   id: number;
@@ -19,14 +19,15 @@ function CategoryPage() {
   useEffect(() => {
     if (!category) return;
 
-    axios
-      .get(
-        `${
-          process.env.REACT_APP_API_BASE_URL
-        }/api/books?category=${encodeURIComponent(category)}`
-      )
-      .then((res) => setBooks(res.data))
-      .catch((err) => console.error(err));
+    const fetchBooks = async () => {
+      const { data, error } = await supabase
+        .from("books")
+        .select("id, title, authors, cover_photo")
+        .contains("tags", [category]);
+      if (!error && data) setBooks(data);
+    };
+
+    fetchBooks();
   }, [category]);
 
   const goToBook = (id: number) => {

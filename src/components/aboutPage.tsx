@@ -13,7 +13,7 @@ function AboutPage() {
       <div className="about-container">
         {" "}
         <img
-          src="assets/chad-and-svetlana-photo.jpg"
+          src="/assets/chad-and-svetlana-photo.jpg"
           alt="Chad and Svetlana Zimmerman"
           className="about-cover-image"
         />
