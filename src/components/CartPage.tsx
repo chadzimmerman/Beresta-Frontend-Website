@@ -37,7 +37,7 @@ function CartPage() {
     try {
       const stripe = await stripePromise;
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/api/checkout`,
+        `/api/checkout`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
