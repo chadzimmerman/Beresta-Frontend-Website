@@ -30,12 +30,13 @@
       "networkError": "Network Error, please try again later."
     },
     "newsletter": {
-      "title": "Get a free eBook when you sign up for our mailing list!",
-      "description": "Plus, receive recommendations and exclusive offers on all of your favorite books from Beresta Literary Press.",
+      "title": "Be the first to know!",
+      "description": "Sign up to get notified about new book releases, sales, and exclusive discounts from Beresta Literary Press.",
       "submit": "Sign Up",
       "placeholder": "john@gmail.com",
       "networkError": "Network Error, please try again later.",
-      "successMessage": "Thank you! Check your inbox for the free eBook."
+      "successMessage": "You're on the list! We'll keep you posted.",
+      "alreadySubscribed": "This email is already subscribed."
     },
     "footer": {
       "home": "Home",
