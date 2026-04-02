@@ -22,7 +22,8 @@ const categories = [
 
 function Header() {
   const { t } = useTranslation() as { t: (key: string) => string };
-  const { searchQuery, setSearchQuery } = useContext(CartContext);
+  const { cart, searchQuery, setSearchQuery } = useContext(CartContext);
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   // State for mobile menu open/close
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -186,7 +187,12 @@ function Header() {
               className="cart-link"
               onClick={() => setIsMenuOpen(false)}
             >
-              <img src={cartIcon} alt="Cart" className="cart-icon" />
+              <div className="cart-icon-wrapper">
+                <img src={cartIcon} alt="Cart" className="cart-icon" />
+                {cartCount > 0 && (
+                  <span className="cart-badge">{cartCount}</span>
+                )}
+              </div>
               <span>{t("header.cart")}</span>
             </Link>
           </li>

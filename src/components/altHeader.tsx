@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import logo from "../assets/beresta-logo.png";
 import cartIcon from "../assets/shopping-cart-line.png";
 import LanguageToggle from "./LanguageToggle";
 import { Link, useNavigate } from "react-router-dom";
+import { CartContext } from "../App";
 
 const categories = [
   "Fiction",
@@ -19,6 +20,8 @@ const categories = [
 
 function AltHeader() {
   const { t } = useTranslation() as { t: (key: string) => string };
+  const { cart } = useContext(CartContext);
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -75,7 +78,12 @@ function AltHeader() {
           </li>
           <li style={styles.navItem}>
             <a href="/cart" style={styles.cartLink}>
-              <img src={cartIcon} alt="Cart" style={styles.cartIcon} />
+              <div className="cart-icon-wrapper">
+                <img src={cartIcon} alt="Cart" style={styles.cartIcon} />
+                {cartCount > 0 && (
+                  <span className="cart-badge">{cartCount}</span>
+                )}
+              </div>
               <span>{t("header.cart")}</span>
             </a>
           </li>

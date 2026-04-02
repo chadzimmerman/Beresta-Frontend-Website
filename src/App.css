@@ -9,10 +9,30 @@
   font-family: 'inknut antiqua', serif;
 }
 
-/* Russian font */
+/* Russian font — Lora has full Cyrillic support and matches
+   Inknut Antiqua's weight and literary feel more closely than Garamond */
 .lang-ru {
-  font-family: "EB Garamond", serif;
+  font-family: "Lora", serif;
   font-weight: 400;
+}
+
+/* Lora renders slightly smaller than Inknut Antiqua at the same px size,
+   so bump up key text areas to keep visual parity */
+.lang-ru .about-section-text,
+.lang-ru .about-main-title,
+.lang-ru .about-section-title {
+  font-size: 1.08em;
+  line-height: 1.8;
+}
+
+.lang-ru .header-name {
+  font-size: 18px;
+}
+
+.lang-ru .nav-trigger,
+.lang-ru .nav-link,
+.lang-ru .cart-link {
+  font-size: 15px;
 }
 
 html {

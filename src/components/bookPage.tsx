@@ -28,7 +28,8 @@ const AMAZON_STORE =
   "https://www.amazon.com/stores/Chad-Michael-Zimmerman/author/B093YNBZX3?ref=sr_ntt_srch_lnk_3&qid=1759242462&sr=1-3&isDramIntegrated=true&shoppingPortalEnabled=true&ccs_id=c0969932-854f-468b-a234-26f687fa5ebd";
 
 function BookPage() {
-  const { t } = useTranslation() as { t: (key: string) => string };
+  const { t, i18n } = useTranslation() as { t: (key: string) => string; i18n: any };
+  const isRu = i18n.language === "ru";
   const { id } = useParams<{ id: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
@@ -107,11 +108,11 @@ function BookPage() {
         <div className="book-right-column" style={styles.rightColumn}>
           {/* Title Section */}
           <div style={styles.titleSection}>
-            <h1 style={styles.title}>{book.title}</h1>
-            {book.subtitle && <p style={styles.subtitle}>{book.subtitle}</p>}
-            {book.authors && <p style={styles.metaText}>by {book.authors}</p>}
+            <h1 style={{ ...styles.title, fontSize: isRu ? "30px" : "28px" }}>{book.title}</h1>
+            {book.subtitle && <p style={{ ...styles.subtitle, fontSize: isRu ? "20px" : "18px" }}>{book.subtitle}</p>}
+            {book.authors && <p style={{ ...styles.metaText, fontSize: isRu ? "17px" : "16px" }}>by {book.authors}</p>}
             {book.translators && (
-              <p style={styles.metaText}>Translators: {book.translators}</p>
+              <p style={{ ...styles.metaText, fontSize: isRu ? "17px" : "16px" }}>Translators: {book.translators}</p>
             )}
           </div>
 
@@ -194,8 +195,8 @@ function BookPage() {
           <div style={styles.bottomSection}>
             {book.description && (
               <div style={styles.description}>
-                <h3 style={styles.sectionTitle}>Description</h3>
-                <p style={styles.text}>{book.description}</p>
+                <h3 style={{ ...styles.sectionTitle, fontSize: isRu ? "22px" : "20px" }}>Description</h3>
+                <p style={{ ...styles.text, fontSize: isRu ? "17px" : "16px", lineHeight: isRu ? "1.8" : "1.6" }}>{book.description}</p>
               </div>
             )}
           </div>

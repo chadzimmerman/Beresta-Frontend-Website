@@ -101,6 +101,31 @@
   white-space: nowrap;
 }
 
+/* Cart icon wrapper + badge */
+.cart-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #AC3737;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+  font-family: sans-serif;
+}
+
 /* Cart Link/Icon */
 .cart-link {
   display: flex;
