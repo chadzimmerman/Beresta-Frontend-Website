@@ -178,10 +178,10 @@ function BookPage() {
                     {t("bookPage.purchaseOnAmazon")}
                   </a>
                   {book.is_autographed_available &&
-                  book.autographed_price !== undefined ? (
+                  book.autographed_price != null ? (
                     <button
                       style={styles.cartButton}
-                      onClick={() => addToCart(book.autographed_price)}
+                      onClick={() => addToCart(book.autographed_price!)}
                     >
                       {t("bookPage.purchaseAutographedCopy")}
                     </button>
