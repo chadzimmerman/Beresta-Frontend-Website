@@ -8,8 +8,6 @@ function SuccessPage() {
   const { cart, setCart } = useContext(CartContext);
   const { t } = useTranslation() as { t: (key: string) => string };
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
   // Clear cart after showing success
   useEffect(() => {
     setCart([]);
