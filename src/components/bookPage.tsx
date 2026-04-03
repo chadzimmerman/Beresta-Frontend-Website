@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CartContext } from "../App";
@@ -39,6 +39,7 @@ function BookPage() {
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -112,6 +113,19 @@ function BookPage() {
       return [...prev, newItem];
     });
     toast.success(`${book.title} added to cart!`);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent, total: number) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      setLightboxIndex((i) => diff > 0 ? (i + 1) % total : (i - 1 + total) % total);
+    }
+    touchStartX.current = null;
   };
 
   const openLightbox = (index: number) => {
@@ -272,7 +286,11 @@ function BookPage() {
             </button>
 
             {/* Main image */}
-            <div style={styles.lightboxMain}>
+            <div
+              style={styles.lightboxMain}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={(e) => handleTouchEnd(e, allImages.length)}
+            >
               {allImages.length > 1 && (
                 <button
                   style={styles.lightboxArrow}
@@ -509,15 +527,14 @@ const styles: { [key: string]: React.CSSProperties } = {
     maxHeight: "90vh",
   },
   lightboxClose: {
-    position: "absolute",
-    top: "-40px",
-    right: 0,
+    alignSelf: "flex-end",
     background: "none",
     border: "none",
     color: "white",
-    fontSize: "24px",
+    fontSize: "28px",
     cursor: "pointer",
     lineHeight: 1,
+    padding: "4px 8px",
   },
   lightboxMain: {
     display: "flex",
