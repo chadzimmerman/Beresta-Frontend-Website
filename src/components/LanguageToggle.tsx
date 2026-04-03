@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 function LanguageToggle() {
   const { i18n } = useTranslation();
 
+  const isEn = i18n.language.startsWith("en");
+
   const toggleLanguage = () => {
-    const newLang = i18n.language === "en" ? "ru" : "en";
-    i18n.changeLanguage(newLang);
+    i18n.changeLanguage(isEn ? "ru" : "en");
   };
 
   return (
     <button onClick={toggleLanguage} className="language-toggle">
-      {i18n.language === "en" ? "Russian" : "Англиский"}{" "}
-      {/* Shows opposite language */}
+      {isEn ? "Russian" : "Английский"}
     </button>
   );
 }
