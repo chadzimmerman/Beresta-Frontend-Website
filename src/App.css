@@ -1077,6 +1077,11 @@ body {
 }
 
 .book-cover-image {
+  display: block;
+  margin: 0 auto;
+}
+
+.book-cover-image {
   width: 100%;
   max-width: 250px; /* Keeps it nicely sized on phones */
   height: auto;
