@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
@@ -7,45 +7,20 @@ interface Book {
   id: number;
   title: string;
   cover_photo: string;
-  // Add other properties if needed
 }
 
 function TrendingBooks() {
   const { t } = useTranslation() as { t: (key: string) => string };
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Fetch books from the backend when the component mounts
-  // useEffect(() => {
-  //   const fetchBooks = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.REACT_APP_API_BASE_URL}/api/books`
-  //       ); //changed from const response = await fetch("http://localhost:3000/api/books");
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-  //       const data = await response.json();
-  //       console.log("Fetched books:", data);
-  //       setBooks(data);
-  //     } catch (error) {
-  //       console.error("Error fetching books:", error);
-  //     } finally {
-  //       setLoading(false); // Set loading to false after fetch
-  //     }
-  //   };
-  //   fetchBooks();
-  // }, []);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const { data, error } = await supabase.from("books").select("*");
+        const { data, error } = await supabase.from("books").select("id, title, cover_photo");
         if (error) throw error;
         setBooks(data ?? []);
-      } catch (error) {
-        console.error("Error fetching books:", error);
       } finally {
         setLoading(false);
       }
@@ -53,50 +28,44 @@ function TrendingBooks() {
     fetchBooks();
   }, []);
 
-  //sliding functionality
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % books.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + books.length) % books.length);
+  const scroll = (direction: "left" | "right") => {
+    const el = carouselRef.current;
+    if (!el || books.length === 0) return;
+    const itemWidth = el.scrollWidth / books.length;
+    el.scrollBy({ left: direction === "right" ? itemWidth : -itemWidth, behavior: "smooth" });
   };
 
   return (
     <div className="trending-books-container">
       <h2 className="trending-title">{t("trendingBooks.title")}</h2>
       <div className="carousel-container">
-        <button className="arrow-button left" onClick={prevSlide}>
-          {"<"}
+        <button className="arrow-button left" onClick={() => scroll("left")} aria-label="Previous">
+          &#8249;
         </button>
 
-        <div className="carousel">
-          {/* This looped display shows 4 books by wrapping the array */}
+        <div className="carousel" ref={carouselRef}>
           {loading ? (
-            <p>Loading...</p> // Added loading state for clarity
+            <p style={{ padding: "20px" }}>Loading...</p>
           ) : (
-            books
-              .concat(books)
-              .slice(currentIndex, currentIndex + 4)
-              .map((book, index) => (
-                <div className="carousel-item" key={index}>
-                  <Link to={`/book/${book.id}`}>
-                    <img
-                      src={book.cover_photo}
-                      alt={book.title}
-                      style={{
-                        borderRadius: "5px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                      }}
-                    />
-                  </Link>
-                </div>
-              ))
+            books.map((book) => (
+              <div className="carousel-item" key={book.id}>
+                <Link to={`/book/${book.id}`}>
+                  <img
+                    src={book.cover_photo}
+                    alt={book.title}
+                    style={{
+                      borderRadius: "4px",
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+                    }}
+                  />
+                </Link>
+              </div>
+            ))
           )}
         </div>
 
-        <button className="arrow-button right" onClick={nextSlide}>
-          {">"}
+        <button className="arrow-button right" onClick={() => scroll("right")} aria-label="Next">
+          &#8250;
         </button>
       </div>
     </div>

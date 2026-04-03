@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { CartContext } from "../App";
@@ -22,6 +22,7 @@ interface Book {
   is_autographed_available: boolean;
   autographed_price?: number;
   status: "available" | "upcoming";
+  gallery_photos?: string[];
 }
 
 const AMAZON_STORE =
@@ -34,6 +35,10 @@ function BookPage() {
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const { setCart } = useContext(CartContext);
+
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -53,6 +58,23 @@ function BookPage() {
     };
     fetchBook();
   }, [id]);
+
+  // Close lightbox on Escape, navigate with arrow keys
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (!lightboxOpen || !book) return;
+      const allImages = [book.cover_photo, ...(book.gallery_photos ?? [])];
+      if (e.key === "Escape") setLightboxOpen(false);
+      if (e.key === "ArrowRight") setLightboxIndex((i) => (i + 1) % allImages.length);
+      if (e.key === "ArrowLeft") setLightboxIndex((i) => (i - 1 + allImages.length) % allImages.length);
+    },
+    [lightboxOpen, book]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   const [notifyEmail, setNotifyEmail] = useState("");
   const [notifySubmitted, setNotifySubmitted] = useState(false);
@@ -75,7 +97,7 @@ function BookPage() {
     const newItem = {
       id: book.id,
       title: book.title,
-      price: Math.round((price ?? book.price) * 100), // use autographed price if provided
+      price: Math.round((price ?? book.price) * 100),
       quantity: 1,
     };
     setCart((prev) => {
@@ -92,19 +114,56 @@ function BookPage() {
     toast.success(`${book.title} added to cart!`);
   };
 
-  if (loading) return <p>{t("loading")}</p>;
-  if (!book) return <p>{t("bookNotFound")}</p>;
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+      <p>{t("loading")}</p>
+    </div>
+  );
+  if (!book) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+      <p>{t("bookNotFound")}</p>
+    </div>
+  );
+
+  const allImages = [book.cover_photo, ...(book.gallery_photos ?? [])];
 
   return (
     <div style={styles.page}>
       <AltHeader />
       <div className="book-page-container" style={styles.container}>
-        <img
-          className="book-cover-image"
-          src={book.cover_photo}
-          alt={book.title}
-          style={styles.cover}
-        />
+        {/* Cover image — clickable */}
+        <div style={styles.coverColumn}>
+          <img
+            className="book-cover-image"
+            src={book.cover_photo}
+            alt={book.title}
+            style={styles.cover}
+            onClick={() => openLightbox(0)}
+          />
+          {/* Thumbnail strip — only shown if there are extra photos */}
+          {(book.gallery_photos ?? []).length > 0 && (
+            <div style={styles.thumbnailStrip}>
+              {allImages.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt={`View ${i + 1}`}
+                  style={{
+                    ...styles.thumbnail,
+                    outline: i === 0 ? "2px solid #AC3737" : "2px solid transparent",
+                  }}
+                  onClick={() => openLightbox(i)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="book-right-column" style={styles.rightColumn}>
           {/* Title Section */}
           <div style={styles.titleSection}>
@@ -202,6 +261,63 @@ function BookPage() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div style={styles.lightboxOverlay} onClick={() => setLightboxOpen(false)}>
+          <div style={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+            {/* Close button */}
+            <button style={styles.lightboxClose} onClick={() => setLightboxOpen(false)}>
+              ✕
+            </button>
+
+            {/* Main image */}
+            <div style={styles.lightboxMain}>
+              {allImages.length > 1 && (
+                <button
+                  style={styles.lightboxArrow}
+                  onClick={() => setLightboxIndex((i) => (i - 1 + allImages.length) % allImages.length)}
+                >
+                  &#8249;
+                </button>
+              )}
+              <img
+                src={allImages[lightboxIndex]}
+                alt={`${book.title} — view ${lightboxIndex + 1}`}
+                style={styles.lightboxImage}
+              />
+              {allImages.length > 1 && (
+                <button
+                  style={styles.lightboxArrow}
+                  onClick={() => setLightboxIndex((i) => (i + 1) % allImages.length)}
+                >
+                  &#8250;
+                </button>
+              )}
+            </div>
+
+            {/* Thumbnail strip */}
+            {allImages.length > 1 && (
+              <div style={styles.lightboxThumbs}>
+                {allImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Thumbnail ${i + 1}`}
+                    style={{
+                      ...styles.lightboxThumb,
+                      outline: i === lightboxIndex ? "2px solid #AC3737" : "2px solid transparent",
+                      opacity: i === lightboxIndex ? 1 : 0.55,
+                    }}
+                    onClick={() => setLightboxIndex(i)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );
@@ -222,10 +338,34 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: "0 auto",
     flex: 1,
   },
+  coverColumn: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    flexShrink: 0,
+  },
   cover: {
     maxWidth: "300px",
+    width: "100%",
     height: "auto",
     marginTop: 0,
+    borderRadius: "4px",
+    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.22)",
+    cursor: "zoom-in",
+  },
+  thumbnailStrip: {
+    display: "flex",
+    gap: "6px",
+    flexWrap: "wrap",
+    maxWidth: "300px",
+  },
+  thumbnail: {
+    width: "60px",
+    height: "78px",
+    objectFit: "cover",
+    borderRadius: "3px",
+    cursor: "pointer",
+    transition: "opacity 0.15s",
   },
   rightColumn: {
     flex: 1,
@@ -235,7 +375,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: "inherit",
     marginTop: 0,
   },
-  // Title Section
   titleSection: {
     margin: 0,
     paddingTop: 0,
@@ -261,9 +400,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#A3A3A3",
   },
   paperbackBox: {
-    border: "1px solid #000000",
-    padding: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+    padding: "18px",
     marginBottom: "15px",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
   },
   paperbackTitle: {
     color: "#AC3737",
@@ -271,13 +412,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: "0 0 10px 0",
   },
   infoContainer: {
-    display: "flex", // Two columns side by side
-    gap: "20px", // Space between columns
+    display: "flex",
+    gap: "20px",
     marginBottom: "15px",
   },
   infoColumn: {
-    flex: 1, // Equal width for each column
-    display: "block", // Stack items vertically (default)
+    flex: 1,
+    display: "block",
   },
   infoLabel: {
     color: "#868686",
@@ -318,7 +459,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "5px",
     cursor: "pointer",
   },
-  // Bottom Section
   bottomSection: {
     flex: 1,
   },
@@ -349,6 +489,74 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "5px",
     cursor: "pointer",
   },
+  // Lightbox
+  lightboxOverlay: {
+    position: "fixed",
+    inset: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.85)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000,
+  },
+  lightboxContent: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "16px",
+    maxWidth: "90vw",
+    maxHeight: "90vh",
+  },
+  lightboxClose: {
+    position: "absolute",
+    top: "-40px",
+    right: 0,
+    background: "none",
+    border: "none",
+    color: "white",
+    fontSize: "24px",
+    cursor: "pointer",
+    lineHeight: 1,
+  },
+  lightboxMain: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+  },
+  lightboxImage: {
+    maxHeight: "70vh",
+    maxWidth: "75vw",
+    objectFit: "contain",
+    borderRadius: "4px",
+    boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
+  },
+  lightboxArrow: {
+    background: "none",
+    border: "none",
+    color: "white",
+    fontSize: "56px",
+    lineHeight: 1,
+    cursor: "pointer",
+    userSelect: "none",
+    padding: "0 8px",
+    opacity: 0.8,
+  },
+  lightboxThumbs: {
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  lightboxThumb: {
+    width: "60px",
+    height: "78px",
+    objectFit: "cover",
+    borderRadius: "3px",
+    cursor: "pointer",
+    transition: "opacity 0.15s",
+  },
+  description: {},
 };
 
 export default BookPage;

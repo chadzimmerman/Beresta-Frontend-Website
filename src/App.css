@@ -103,39 +103,55 @@ body {
 /* Ensure the carousel track itself fills the available space */
 .carousel {
   display: flex;
-  overflow: hidden;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   width: 100%;
-  justify-content: space-between;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-item {
   flex: 0 0 18%; /* Desktop default */
+  scroll-snap-align: start;
   text-align: center;
   margin: 0 10px;
+  transition: transform 0.2s ease;
+}
+
+.carousel-item:hover {
+  transform: translateY(-4px);
 }
 
 .carousel img {
-  width: 100%; 
+  width: 100%;
   height: auto;
   max-width: 100%;
-  display: block; 
+  display: block;
 }
 
 /* Arrow Button Styling */
 .arrow-button {
-  background-color: transparent; 
-  border: none; 
-  color: black; 
-  font-size: 40px; 
+  background-color: transparent;
+  border: none;
+  color: #333;
+  font-size: 52px;
+  line-height: 1;
   cursor: pointer;
-  padding: 0 10px; 
-  flex-shrink: 0; 
-  display: block; /* Desktop default */
-  transition: opacity 0.2s;
+  padding: 0 12px;
+  flex-shrink: 0;
+  display: block;
+  transition: color 0.2s, transform 0.15s;
+  user-select: none;
 }
 
 .arrow-button:hover {
-  opacity: 0.7;
+  color: #AC3737;
+  transform: scale(1.15);
 }
 
 .left {
@@ -148,76 +164,114 @@ body {
 
 /* 2. ABOUT US STYLING (Mobile Focus) */
 .about-us-container {
-  background-color: #D8DBE1;
-  width: 90vw; /* Take up more width on mobile */
-  padding: 20px 10px;
-  margin: 40px auto; /* Reduced margin */
+  background-color: #F7F4EF;
+  width: 90vw;
+  padding: 30px 20px;
+  margin: 40px auto;
   max-width: 800px;
+  border-left: 4px solid #AC3737;
 }
 
 .about-us-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 15px;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .about-us-paragraph {
-  font-size: 16px; 
-  text-align: center; 
-  padding: 0 10px; 
+  font-size: 15px;
+  text-align: left;
+  padding: 0;
+  line-height: 1.8;
+  color: #333;
 }
 
 /* 3. MAILING LIST STYLING (Mobile Focus) */
 .mailing-list-container {
-  width: 90vw;
-  padding: 20px 10px;
-  margin: 0 auto 50px auto;
-  border: 4px solid #AC3737; 
+  width: 100%;
+  padding: 50px 20px;
+  margin: 0;
+  background-color: #ECF1F5;
   text-align: center;
+  border: none;
+}
+
+.mailing-list-h1 {
+  color: #1a1a1a;
+  font-size: 22px;
+  margin: 0 0 12px 0;
+}
+
+.mailing-list-text {
+  color: #444;
+  font-size: 15px;
+  margin: 0 0 24px 0;
+  line-height: 1.7;
 }
 
 .newsletter-form {
   display: flex;
-  flex-direction: column; /* Stack input and button on mobile */
-  max-width: 400px;
-  margin: 0 auto 20px auto;
+  flex-direction: column;
+  max-width: 460px;
+  margin: 0 auto 16px auto;
 }
 
 .mailing-list-input {
-  flex: none; 
+  flex: none;
   width: 100%;
-  padding: 12px;
-  border: 2px solid #ccc;
-  border-radius: 30px; 
-  margin-bottom: 10px; 
+  padding: 13px 16px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  margin-bottom: 10px;
   font-size: 16px;
+  color: #1a1a1a;
   outline: none;
-  border-right: 2px solid #ccc; 
+  font-family: inherit;
+}
+
+.mailing-list-input::placeholder {
+  color: #aaa;
+}
+
+.mailing-list-input:focus {
+  border-color: #AC3737;
 }
 
 .mailing-list-button {
-  flex: none; 
+  flex: none;
   width: 100%;
-  padding: 12px 25px;
-  background-color: black;
+  padding: 13px 25px;
+  background-color: #AC3737;
   color: white;
-  border: 2px solid black;
-  border-radius: 30px; 
+  border: none;
+  border-radius: 30px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.25s;
   font-family: 'inknut antiqua', sans-serif;
+}
+
+.mailing-list-button:hover {
+  background-color: #8c2a2a;
+}
+
+.submission-message {
+  color: #333;
+  font-size: 15px;
+  margin-top: 8px;
 }
 
 /* 4. FOOTER STYLING (Mobile Focus - Default) */
 .footer {
   display: flex;
-  flex-direction: column; /* Stacks items vertically on mobile */
-  align-items: center; /* Centers items horizontally */
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  padding: 20px 10px;
-  background-color: #ECF1F5; 
+  padding: 28px 20px;
+  background-color: #ECF1F5;
   width: 100%;
+  border-top: 3px solid #AC3737;
 }
 
 .footer-logo-copyright {
@@ -229,7 +283,7 @@ body {
 }
 
 .footer-logo {
-  font-size: large; 
+  font-size: large;
   cursor: pointer;
   margin: 0;
   font-family: 'inknut antiqua', sans-serif;
@@ -239,6 +293,7 @@ body {
 .footer-copyright {
   font-size: small;
   margin: 0;
+  color: #666;
 }
 
 .footer-links {
@@ -252,13 +307,13 @@ body {
 
 .footer-links a {
   color: black;
-  text-decoration: none; 
-  font-size: 16px; 
-  transition: color 0.3s;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s;
 }
 
 .footer-links a:hover {
-  color: #AC3737; 
+  color: #AC3737;
 }
 
 /* --- Media Query for Mobile (Less than 768px) --- */
@@ -295,15 +350,17 @@ body {
   }
   
   .carousel {
-    overflow-x: scroll; 
-    padding-bottom: 10px; 
-    gap: 15px; 
-    width: auto; 
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+    gap: 0;
+    width: 100%;
   }
 
   .carousel-item {
-    flex: 0 0 60%; /* Show 1.5 items */
-    margin: 0 10px; 
+    flex: 0 0 55%;
+    scroll-snap-align: start;
+    margin: 0 8px;
   }
 
   .trending-title {
@@ -359,19 +416,20 @@ body {
 
   /* About Us (Tablet) */
   .about-us-container {
-    width: 85vw;
-    margin-bottom: 100px;
+    width: 80vw;
+    margin-bottom: 60px;
+    padding: 30px 30px;
   }
   .about-us-paragraph {
-    font-size: 20px;
-    padding: 0 30px;
+    font-size: 16px;
+    padding: 0;
     text-align: left;
   }
 
   /* Mailing List (Tablet) */
   .mailing-list-container {
-    width: 75vw;
-    padding: 30px 20px;
+    width: 100%;
+    padding: 60px 40px;
   }
   .newsletter-form {
     flex-direction: row;
@@ -379,13 +437,13 @@ body {
   .mailing-list-input {
     flex: 3;
     border-radius: 30px 0 0 30px;
-    border-right: none; 
+    border-right: none;
     margin-bottom: 0;
   }
   .mailing-list-button {
     flex: 1;
     border-radius: 0 30px 30px 0;
-    padding: 15px 25px;
+    padding: 13px 25px;
   }
 
   /* 🚨 FOOTER FIX (Tablet/Desktop: Side-by-side layout) 🚨 */
@@ -461,28 +519,27 @@ body {
 
   /* About Us (Desktop) */
   .about-us-container {
-    width: 90vw;
-    max-width: 1400px;
-    margin-bottom: 200px;
-    padding: 40px;
+    width: 70vw;
+    max-width: 860px;
+    margin-bottom: 80px;
+    padding: 36px 40px;
   }
   .about-us-paragraph {
-    font-size: 28px;
-    padding: 0 40px;
+    font-size: 17px;
+    padding: 0;
   }
 
   /* Mailing List (Desktop) */
   .mailing-list-container {
-    width: 70vw;
-    border: 8px solid #AC3737;
-    padding: 40px 20px;
-    margin-bottom: 100px;
+    width: 100%;
+    padding: 70px 40px;
+    margin-bottom: 0;
   }
-  .mailing-list-input {
-    padding: 15px;
+  .mailing-list-h1 {
+    font-size: 26px;
   }
-  .mailing-list-button {
-    padding: 3px 25px; 
+  .mailing-list-text {
+    font-size: 16px;
   }
 
   /* Footer (Desktop - inherits side-by-side from 768px+) */
@@ -619,14 +676,26 @@ body {
   gap: 15px; /* Tighter gap on mobile */
 }
 
-.category-card { 
-  cursor: pointer; 
-  text-align: center; 
+.category-card {
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s ease;
 }
 
-.category-cover-image { 
-  width: 100%; 
-  height: auto; 
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-cover-image {
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s ease;
+}
+
+.category-card:hover .category-cover-image {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 .category-book-title { 
@@ -721,6 +790,11 @@ body {
 .search-result-card {
   cursor: pointer;
   text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.search-result-card:hover {
+  transform: translateY(-5px);
 }
 
 .search-result-cover-wrapper {
@@ -731,6 +805,12 @@ body {
   width: 100%;
   height: auto;
   border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.2s ease;
+}
+
+.search-result-card:hover .search-result-cover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 .search-result-badge {
