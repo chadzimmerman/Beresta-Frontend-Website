@@ -349,7 +349,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   container: {
     display: "flex",
-    alignItems: "flex-start",
     gap: "20px",
     padding: "0 20px 20px 20px",
     maxWidth: "1000px",
