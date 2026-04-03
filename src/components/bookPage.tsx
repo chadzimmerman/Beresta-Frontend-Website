@@ -359,8 +359,10 @@ const styles: { [key: string]: React.CSSProperties } = {
   coverColumn: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
     gap: "10px",
     flexShrink: 0,
+    alignSelf: "center",
   },
   cover: {
     maxWidth: "300px",
