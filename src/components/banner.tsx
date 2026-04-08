@@ -1,5 +1,5 @@
 import React from "react";
-import treebanner from "../assets/treebanner.jpg";
+import treebanner from "../assets/treebanner.webp";
 
 function Banner() {
   return (
