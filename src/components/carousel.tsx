@@ -79,7 +79,10 @@ function TrendingBooks() {
     setItemIndex((i) => i - 1);
   };
 
-  const handleTransitionEnd = () => {
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    // Ignore events bubbling up from child elements (e.g. hover transitions on items)
+    if (e.target !== e.currentTarget) return;
+
     // Entered the trailing clone zone → jump back to real start
     if (itemIndex >= books.length + visibleCount) {
       setAnimating(false);
