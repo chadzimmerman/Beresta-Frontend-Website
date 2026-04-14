@@ -54,7 +54,7 @@ function TrendingBooks() {
     updateItemWidth();
     window.addEventListener("resize", updateItemWidth);
     return () => window.removeEventListener("resize", updateItemWidth);
-  }, [updateItemWidth]);
+  }, [updateItemWidth, books]);
 
   const goNext = () => {
     if (animating || books.length === 0) return;
