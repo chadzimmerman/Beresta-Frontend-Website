@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
@@ -14,7 +14,13 @@ function TrendingBooks() {
   const { t } = useTranslation() as { t: (key: string) => string };
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const carouselRef = useRef<HTMLDivElement>(null);
+
+  // itemIndex into the extended array [lastBook, ...books, firstBook]
+  // index 1 = first real book, index N = last real book
+  const [itemIndex, setItemIndex] = useState(1);
+  const [animating, setAnimating] = useState(false);
+  const [itemWidth, setItemWidth] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -31,73 +37,112 @@ function TrendingBooks() {
     fetchBooks();
   }, []);
 
-  // Once books load, jump to the middle set so both directions have room
-  useEffect(() => {
-    if (books.length === 0 || !carouselRef.current) return;
-    const el = carouselRef.current;
-    const itemWidth = el.scrollWidth / (books.length * 3);
-    el.scrollLeft = itemWidth * books.length;
-  }, [books]);
-
-  // Teleport silently ONLY after all scroll momentum has fully stopped
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el || books.length === 0) return;
-
-    const teleport = () => {
-      const itemWidth = el.scrollWidth / (books.length * 3);
-      const setWidth = itemWidth * books.length;
-      if (el.scrollLeft < setWidth * 0.5) {
-        el.scrollLeft += setWidth;
-      } else if (el.scrollLeft > setWidth * 2 - el.clientWidth) {
-        el.scrollLeft -= setWidth;
-      }
-    };
-
-    // scrollend fires after momentum + snap animation fully settle — no visible jump
-    el.addEventListener("scrollend", teleport, { passive: true });
-    return () => el.removeEventListener("scrollend", teleport);
-  }, [books]);
-
-  const scroll = (direction: "left" | "right") => {
-    const el = carouselRef.current;
-    if (!el || books.length === 0) return;
-    const itemWidth = el.scrollWidth / (books.length * 3);
-    el.scrollBy({ left: direction === "right" ? itemWidth : -itemWidth, behavior: "smooth" });
+  const getVisibleCount = () => {
+    if (typeof window === "undefined") return 5;
+    if (window.innerWidth >= 1024) return 5;
+    if (window.innerWidth >= 768) return 3;
+    return 2;
   };
 
-  const tripleBooks = [...books, ...books, ...books];
+  const updateItemWidth = useCallback(() => {
+    if (containerRef.current) {
+      setItemWidth(containerRef.current.clientWidth / getVisibleCount());
+    }
+  }, []);
+
+  useEffect(() => {
+    updateItemWidth();
+    window.addEventListener("resize", updateItemWidth);
+    return () => window.removeEventListener("resize", updateItemWidth);
+  }, [updateItemWidth]);
+
+  const goNext = () => {
+    if (animating || books.length === 0) return;
+    setAnimating(true);
+    setItemIndex((i) => i + 1);
+  };
+
+  const goPrev = () => {
+    if (animating || books.length === 0) return;
+    setAnimating(true);
+    setItemIndex((i) => i - 1);
+  };
+
+  const handleTransitionEnd = () => {
+    // Land on clone of first → instantly jump to real first (index 1)
+    if (itemIndex >= books.length + 1) {
+      setAnimating(false);
+      setItemIndex(1);
+      return;
+    }
+    // Land on clone of last → instantly jump to real last (index books.length)
+    if (itemIndex <= 0) {
+      setAnimating(false);
+      setItemIndex(books.length);
+      return;
+    }
+    setAnimating(false);
+  };
+
+  if (books.length === 0) return null;
+
+  // Extended array: clone of last + all books + clone of first
+  const extended = [books[books.length - 1], ...books, books[0]];
+  const translateX = -itemIndex * itemWidth;
 
   return (
     <div className="trending-books-container">
       <h2 className="trending-title">{t("trendingBooks.title")}</h2>
       <div className="carousel-container">
-        <button className="arrow-button left" onClick={() => scroll("left")} aria-label="Previous">
+        <button className="arrow-button left" onClick={goPrev} aria-label="Previous">
           &#8249;
         </button>
 
-        <div className="carousel" ref={carouselRef}>
-          {loading ? (
-            <p style={{ padding: "20px" }}>Loading...</p>
-          ) : (
-            tripleBooks.map((book, index) => (
-              <div className="carousel-item" key={`${book.id}-${index}`}>
-                <Link to={`/book/${book.slug}`}>
-                  <img
-                    src={book.cover_photo}
-                    alt={book.title}
-                    style={{
-                      borderRadius: "4px",
-                      boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-                    }}
-                  />
-                </Link>
-              </div>
-            ))
-          )}
+        {/* Clipping window */}
+        <div style={{ overflow: "hidden", flex: 1 }} ref={containerRef}>
+          {/* Sliding track */}
+          <div
+            style={{
+              display: "flex",
+              transform: `translateX(${translateX}px)`,
+              transition: animating ? "transform 0.4s ease" : "none",
+            }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {loading ? (
+              <p style={{ padding: "20px" }}>Loading...</p>
+            ) : (
+              extended.map((book, index) => (
+                <div
+                  key={`${book.id}-${index}`}
+                  style={{
+                    flex: `0 0 ${itemWidth}px`,
+                    padding: "0 10px",
+                    boxSizing: "border-box",
+                    transition: "transform 0.2s ease",
+                  }}
+                  className="carousel-item"
+                >
+                  <Link to={`/book/${book.slug}`}>
+                    <img
+                      src={book.cover_photo}
+                      alt={book.title}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "4px",
+                        boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+                        display: "block",
+                      }}
+                    />
+                  </Link>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
-        <button className="arrow-button right" onClick={() => scroll("right")} aria-label="Next">
+        <button className="arrow-button right" onClick={goNext} aria-label="Next">
           &#8250;
         </button>
       </div>

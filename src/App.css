@@ -100,19 +100,9 @@ body {
   margin-bottom: 20px; 
 }
 
-/* Ensure the carousel track itself fills the available space */
+/* Carousel track — overflow and transform handled inline in component */
 .carousel {
   display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  width: 100%;
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;
 }
 
 .carousel-item {
