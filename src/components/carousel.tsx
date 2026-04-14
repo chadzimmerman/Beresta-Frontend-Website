@@ -10,16 +10,26 @@ interface Book {
   cover_photo: string;
 }
 
+function getVisibleCount(): number {
+  if (typeof window === "undefined") return 5;
+  if (window.innerWidth >= 1024) return 5;
+  if (window.innerWidth >= 768) return 3;
+  return 2;
+}
+
 function TrendingBooks() {
   const { t } = useTranslation() as { t: (key: string) => string };
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // itemIndex into the extended array [lastBook, ...books, firstBook]
-  // index 1 = first real book, index N = last real book
-  const [itemIndex, setItemIndex] = useState(1);
-  const [animating, setAnimating] = useState(false);
   const [itemWidth, setItemWidth] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(getVisibleCount());
+
+  // itemIndex points into the extended array.
+  // extended = [last N clones | real books | first N clones]
+  // Real books start at index `visibleCount`, so we initialize there.
+  const [itemIndex, setItemIndex] = useState(visibleCount);
+  const [animating, setAnimating] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,24 +47,25 @@ function TrendingBooks() {
     fetchBooks();
   }, []);
 
-  const getVisibleCount = () => {
-    if (typeof window === "undefined") return 5;
-    if (window.innerWidth >= 1024) return 5;
-    if (window.innerWidth >= 768) return 3;
-    return 2;
-  };
-
-  const updateItemWidth = useCallback(() => {
-    if (containerRef.current) {
-      setItemWidth(containerRef.current.clientWidth / getVisibleCount());
-    }
+  const measure = useCallback(() => {
+    if (!containerRef.current) return;
+    const vc = getVisibleCount();
+    setVisibleCount(vc);
+    setItemWidth(containerRef.current.clientWidth / vc);
   }, []);
 
+  // Measure on mount, after books load, and on resize
   useEffect(() => {
-    updateItemWidth();
-    window.addEventListener("resize", updateItemWidth);
-    return () => window.removeEventListener("resize", updateItemWidth);
-  }, [updateItemWidth, books]);
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure, books]);
+
+  // When visibleCount changes (resize), keep itemIndex pointing at the
+  // same real book by clamping to the new clone boundary
+  useEffect(() => {
+    setItemIndex(visibleCount);
+  }, [visibleCount]);
 
   const goNext = () => {
     if (animating || books.length === 0) return;
@@ -69,13 +80,13 @@ function TrendingBooks() {
   };
 
   const handleTransitionEnd = () => {
-    // Land on clone of first → instantly jump to real first (index 1)
-    if (itemIndex >= books.length + 1) {
+    // Entered the trailing clone zone → jump back to real start
+    if (itemIndex >= books.length + visibleCount) {
       setAnimating(false);
-      setItemIndex(1);
+      setItemIndex(visibleCount);
       return;
     }
-    // Land on clone of last → instantly jump to real last (index books.length)
+    // Entered the leading clone zone → jump to real end
     if (itemIndex <= 0) {
       setAnimating(false);
       setItemIndex(books.length);
@@ -84,10 +95,13 @@ function TrendingBooks() {
     setAnimating(false);
   };
 
-  if (books.length === 0) return null;
+  if (loading || books.length === 0) return null;
 
-  // Extended array: clone of last + all books + clone of first
-  const extended = [books[books.length - 1], ...books, books[0]];
+  // Clone visibleCount items at each end so every visible slot is filled
+  const clonesBefore = books.slice(-visibleCount);
+  const clonesAfter = books.slice(0, visibleCount);
+  const extended = [...clonesBefore, ...books, ...clonesAfter];
+
   const translateX = -itemIndex * itemWidth;
 
   return (
@@ -109,36 +123,31 @@ function TrendingBooks() {
             }}
             onTransitionEnd={handleTransitionEnd}
           >
-            {loading ? (
-              <p style={{ padding: "20px" }}>Loading...</p>
-            ) : (
-              extended.map((book, index) => (
-                <div
-                  key={`${book.id}-${index}`}
-                  style={{
-                    flex: `0 0 ${itemWidth}px`,
-                    padding: "0 10px",
-                    boxSizing: "border-box",
-                    transition: "transform 0.2s ease",
-                  }}
-                  className="carousel-item"
-                >
-                  <Link to={`/book/${book.slug}`}>
-                    <img
-                      src={book.cover_photo}
-                      alt={book.title}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        borderRadius: "4px",
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-                        display: "block",
-                      }}
-                    />
-                  </Link>
-                </div>
-              ))
-            )}
+            {extended.map((book, index) => (
+              <div
+                key={`${book.id}-${index}`}
+                style={{
+                  flex: `0 0 ${itemWidth}px`,
+                  padding: "0 10px",
+                  boxSizing: "border-box",
+                }}
+                className="carousel-item"
+              >
+                <Link to={`/book/${book.slug}`}>
+                  <img
+                    src={book.cover_photo}
+                    alt={book.title}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "4px",
+                      boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+                      display: "block",
+                    }}
+                  />
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
 
