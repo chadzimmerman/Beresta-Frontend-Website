@@ -58,7 +58,7 @@ function BookPage() {
       }
     };
     fetchBook();
-  }, [id]);
+  }, [slug]);
 
   // Close lightbox on Escape, navigate with arrow keys
   const handleKeyDown = useCallback(
