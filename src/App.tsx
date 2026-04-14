@@ -61,7 +61,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/book/:id" element={<BookPage />} />
+            <Route path="/book/:slug" element={<BookPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/success" element={<SuccessPage />} />

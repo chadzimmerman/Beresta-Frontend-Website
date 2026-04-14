@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabaseClient";
 
 interface Book {
   id: number;
+  slug: string;
   title: string;
   cover_photo: string;
 }
@@ -18,7 +19,7 @@ function TrendingBooks() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const { data, error } = await supabase.from("books").select("id, title, cover_photo");
+        const { data, error } = await supabase.from("books").select("id, slug, title, cover_photo");
         if (error) throw error;
         setBooks(data ?? []);
       } finally {
@@ -49,7 +50,7 @@ function TrendingBooks() {
           ) : (
             books.map((book) => (
               <div className="carousel-item" key={book.id}>
-                <Link to={`/book/${book.id}`}>
+                <Link to={`/book/${book.slug}`}>
                   <img
                     src={book.cover_photo}
                     alt={book.title}

@@ -31,7 +31,7 @@ const AMAZON_STORE =
 function BookPage() {
   const { t, i18n } = useTranslation() as { t: (key: string) => string; i18n: any };
   const isRu = i18n.language === "ru";
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const { setCart } = useContext(CartContext);
@@ -47,7 +47,7 @@ function BookPage() {
         const { data, error } = await supabase
           .from("books")
           .select("*")
-          .eq("id", Number(id))
+          .eq("slug", slug)
           .single();
         if (error) throw error;
         setBook(data);

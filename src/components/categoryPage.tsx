@@ -6,6 +6,7 @@ import { supabase } from "../lib/supabaseClient";
 
 interface Book {
   id: number;
+  slug: string;
   title: string;
   authors: string;
   cover_photo: string;
@@ -22,7 +23,7 @@ function CategoryPage() {
     const fetchBooks = async () => {
       const { data, error } = await supabase
         .from("books")
-        .select("id, title, authors, cover_photo")
+        .select("id, slug, title, authors, cover_photo")
         .contains("tags", [category]);
       if (!error && data) setBooks(data);
     };
@@ -30,8 +31,8 @@ function CategoryPage() {
     fetchBooks();
   }, [category]);
 
-  const goToBook = (id: number) => {
-    navigate(`/book/${id}`);
+  const goToBook = (slug: string) => {
+    navigate(`/book/${slug}`);
   };
 
   return (
@@ -47,7 +48,7 @@ function CategoryPage() {
                   src={book.cover_photo}
                   alt={book.title}
                   className="category-cover-image"
-                  onClick={() => goToBook(book.id)}
+                  onClick={() => goToBook(book.slug)}
                 />
 
                 <h3 className="category-book-title">{book.title}</h3>

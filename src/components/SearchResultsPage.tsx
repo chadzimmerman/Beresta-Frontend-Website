@@ -6,6 +6,7 @@ import { supabase } from "../lib/supabaseClient";
 
 interface Book {
   id: number;
+  slug: string;
   title: string;
   authors: string;
   cover_photo: string;
@@ -30,7 +31,7 @@ function SearchResultsPage() {
       setLoading(true);
       const { data } = await supabase
         .from("books")
-        .select("id, title, authors, cover_photo, status")
+        .select("id, slug, title, authors, cover_photo, status")
         .or(
           `title.ilike.%${query}%,authors.ilike.%${query}%,description.ilike.%${query}%,tags.cs.{${query}}`
         );
@@ -63,7 +64,7 @@ function SearchResultsPage() {
             <div
               key={book.id}
               className="search-result-card"
-              onClick={() => navigate(`/book/${book.id}`)}
+              onClick={() => navigate(`/book/${book.slug}`)}
             >
               <div className="search-result-cover-wrapper">
                 <img
