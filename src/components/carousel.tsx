@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
@@ -15,7 +15,6 @@ function TrendingBooks() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const isJumping = useRef(false);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -32,7 +31,7 @@ function TrendingBooks() {
     fetchBooks();
   }, []);
 
-  // After books load, scroll to the middle set so both directions work
+  // Once books load, jump to the middle set so both directions have room
   useEffect(() => {
     if (books.length === 0 || !carouselRef.current) return;
     const el = carouselRef.current;
@@ -40,23 +39,24 @@ function TrendingBooks() {
     el.scrollLeft = itemWidth * books.length;
   }, [books]);
 
-  // When near the edges, silently teleport to the equivalent position in the middle set
-  const handleScroll = useCallback(() => {
+  // Teleport silently ONLY after all scroll momentum has fully stopped
+  useEffect(() => {
     const el = carouselRef.current;
-    if (!el || books.length === 0 || isJumping.current) return;
+    if (!el || books.length === 0) return;
 
-    const itemWidth = el.scrollWidth / (books.length * 3);
-    const setWidth = itemWidth * books.length;
+    const teleport = () => {
+      const itemWidth = el.scrollWidth / (books.length * 3);
+      const setWidth = itemWidth * books.length;
+      if (el.scrollLeft < setWidth * 0.5) {
+        el.scrollLeft += setWidth;
+      } else if (el.scrollLeft > setWidth * 2 - el.clientWidth) {
+        el.scrollLeft -= setWidth;
+      }
+    };
 
-    if (el.scrollLeft < setWidth * 0.25) {
-      isJumping.current = true;
-      el.scrollLeft += setWidth;
-      isJumping.current = false;
-    } else if (el.scrollLeft > setWidth * 2 - el.clientWidth * 0.5) {
-      isJumping.current = true;
-      el.scrollLeft -= setWidth;
-      isJumping.current = false;
-    }
+    // scrollend fires after momentum + snap animation fully settle — no visible jump
+    el.addEventListener("scrollend", teleport, { passive: true });
+    return () => el.removeEventListener("scrollend", teleport);
   }, [books]);
 
   const scroll = (direction: "left" | "right") => {
@@ -66,7 +66,6 @@ function TrendingBooks() {
     el.scrollBy({ left: direction === "right" ? itemWidth : -itemWidth, behavior: "smooth" });
   };
 
-  // Render books three times for seamless infinite wrapping
   const tripleBooks = [...books, ...books, ...books];
 
   return (
@@ -77,7 +76,7 @@ function TrendingBooks() {
           &#8249;
         </button>
 
-        <div className="carousel" ref={carouselRef} onScroll={handleScroll}>
+        <div className="carousel" ref={carouselRef}>
           {loading ? (
             <p style={{ padding: "20px" }}>Loading...</p>
           ) : (
