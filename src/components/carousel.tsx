@@ -132,6 +132,7 @@ function TrendingBooks() {
                 style={{
                   flex: `0 0 ${itemWidth}px`,
                   padding: "0 10px",
+                  margin: "0",
                   boxSizing: "border-box",
                 }}
                 className="carousel-item"
