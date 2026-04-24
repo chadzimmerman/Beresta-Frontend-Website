@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
         };
       }),
       mode: "payment",
+      metadata: { app: "beresta" },
       customer_email: email || undefined,
       success_url: `${process.env.FRONTEND_URL}/success`,
       cancel_url: `${process.env.FRONTEND_URL}/cart`,
