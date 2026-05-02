@@ -29,7 +29,7 @@ function SuccessPage() {
             Your order will be shipped within <strong>2–3 business days</strong> via USPS Media Mail and should arrive within <strong>7–10 days</strong>.
           </p>
           <p style={styles.shippingText}>
-            A receipt has been sent to your email. If you have any questions, please reach out to us at <strong>zimkarafly@gmail.com</strong>.
+            A receipt has been sent to your email. If you have any questions, please reach out to us at <strong>halftonellc@gmail.com</strong>.
           </p>
         </div>
       </div>
