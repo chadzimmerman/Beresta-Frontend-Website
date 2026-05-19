@@ -8,6 +8,7 @@ import CartPage from "./components/CartPage";
 import SuccessPage from "./components/success";
 import CategoryPage from "./components/categoryPage";
 import SearchResultsPage from "./components/SearchResultsPage";
+import FAQPage from "./components/FAQPage";
 import { useTranslation } from "react-i18next";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -67,6 +68,7 @@ function App() {
             <Route path="/success" element={<SuccessPage />} />
             <Route path="/category/:category" element={<CategoryPage />} />
             <Route path="/search" element={<SearchResultsPage />} />
+            <Route path="/faq" element={<FAQPage />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </Router>

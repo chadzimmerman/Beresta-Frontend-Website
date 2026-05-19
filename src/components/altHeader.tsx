@@ -69,6 +69,11 @@ function AltHeader() {
             </Link>
           </li>
           <li style={styles.navItem}>
+            <Link to="/faq" style={styles.navLink}>
+              FAQ
+            </Link>
+          </li>
+          <li style={styles.navItem}>
             <Link to="/#contact" style={styles.navLink}>
               {t("header.contactUs")}
             </Link>

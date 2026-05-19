@@ -30,6 +30,9 @@ function Footer() {
         <Link to="/about" onClick={scrollToTop}>
           {t("footer.aboutUs")}
         </Link>
+        <Link to="/faq" onClick={scrollToTop}>
+          FAQ
+        </Link>
         <a href="/#contact">{t("footer.contactUs")}</a>
       </nav>
     </footer>
