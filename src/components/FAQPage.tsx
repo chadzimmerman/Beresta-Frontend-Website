@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import AltHeader from "./altHeader";
 import Footer from "./footer";
 
-interface FAQItem {
+interface FAQItemProps {
   question: string;
   answer: React.ReactNode;
 }
 
 interface FAQSection {
   title: string;
-  items: FAQItem[];
+  items: FAQItemProps[];
 }
 
 const linkStyle: React.CSSProperties = {
@@ -143,7 +143,7 @@ const faqSections: FAQSection[] = [
   },
 ];
 
-function FAQItem({ question, answer }: FAQItem) {
+function FAQItem({ question, answer }: FAQItemProps) {
   const [open, setOpen] = useState(false);
   return (
     <div style={styles.item}>
