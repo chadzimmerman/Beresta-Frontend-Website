@@ -23,6 +23,7 @@ interface Book {
   autographed_price?: number;
   status: "available" | "upcoming";
   gallery_photos?: string[];
+  inventory?: number | null;
 }
 
 const AMAZON_STORE =
@@ -100,10 +101,15 @@ function BookPage() {
       title: book.title,
       price: Math.round((price ?? book.price) * 100),
       quantity: 1,
+      inventory: book.inventory ?? undefined,
     };
     setCart((prev) => {
       const existing = prev.find((item) => item.id === newItem.id);
       if (existing) {
+        if (book.inventory != null && existing.quantity >= book.inventory) {
+          toast.warn(`Only ${book.inventory} available!`);
+          return prev;
+        }
         return prev.map((item) =>
           item.id === newItem.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -241,6 +247,12 @@ function BookPage() {
                     </p>
                   </div>
                 </div>
+                {book.inventory != null && book.inventory > 0 && book.inventory < 8 && (
+                  <p style={styles.lowStockBadge}>Only {book.inventory} left</p>
+                )}
+                {book.inventory === 0 && (
+                  <p style={styles.outOfStockBadge}>Out of Stock — available on Amazon</p>
+                )}
                 <div style={styles.buttonContainer}>
                   <a
                     href={book.amazon_link ?? AMAZON_STORE}
@@ -251,7 +263,8 @@ function BookPage() {
                     {t("bookPage.purchaseOnAmazon")}
                   </a>
                   {book.is_autographed_available &&
-                  book.autographed_price != null ? (
+                  book.autographed_price != null &&
+                  book.inventory !== 0 ? (
                     <button
                       style={styles.cartButton}
                       onClick={() => addToCart(book.autographed_price!)}
@@ -574,6 +587,18 @@ const styles: { [key: string]: React.CSSProperties } = {
     transition: "opacity 0.15s",
   },
   description: {},
+  lowStockBadge: {
+    color: "#AC3737",
+    fontSize: "14px",
+    fontWeight: "bold",
+    margin: "0 0 10px 0",
+  },
+  outOfStockBadge: {
+    color: "#888",
+    fontSize: "14px",
+    fontStyle: "italic",
+    margin: "0 0 10px 0",
+  },
 };
 
 export default BookPage;

@@ -32,7 +32,12 @@ module.exports = async (req, res) => {
         };
       }),
       mode: "payment",
-      metadata: { app: "beresta" },
+      metadata: {
+        app: "beresta",
+        items: JSON.stringify(
+          items.map((item) => ({ id: item.id, quantity: item.quantity || 1 }))
+        ),
+      },
       customer_email: email || undefined,
       success_url: `${process.env.FRONTEND_URL}/success`,
       cancel_url: `${process.env.FRONTEND_URL}/cart`,

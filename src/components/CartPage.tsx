@@ -17,9 +17,11 @@ function CartPage() {
 
   const increaseQuantity = (id: number) => {
     setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+      prev.map((item) => {
+        if (item.id !== id) return item;
+        if (item.inventory != null && item.quantity >= item.inventory) return item;
+        return { ...item, quantity: item.quantity + 1 };
+      })
     );
   };
 
