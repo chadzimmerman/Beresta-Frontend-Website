@@ -12,6 +12,11 @@ interface FAQSection {
   items: FAQItem[];
 }
 
+const linkStyle: React.CSSProperties = {
+  color: "#AC3737",
+  textDecoration: "underline",
+};
+
 const faqSections: FAQSection[] = [
   {
     title: "Autographed Copies",
@@ -137,11 +142,6 @@ const faqSections: FAQSection[] = [
     ],
   },
 ];
-
-const linkStyle: React.CSSProperties = {
-  color: "#AC3737",
-  textDecoration: "underline",
-};
 
 function FAQItem({ question, answer }: FAQItem) {
   const [open, setOpen] = useState(false);
