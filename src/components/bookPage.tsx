@@ -22,6 +22,7 @@ interface Book {
   is_autographed_available: boolean;
   autographed_price?: number;
   status: "available" | "upcoming";
+  anticipated_release_date?: string | null;
   gallery_photos?: string[];
   inventory?: number | null;
 }
@@ -200,6 +201,16 @@ function BookPage() {
             {book.status === "upcoming" ? (
               <>
                 <h2 style={styles.paperbackTitle}>Coming Soon</h2>
+                {book.anticipated_release_date && (
+                  <p style={{ ...styles.text, color: "#AC3737", fontWeight: "bold", marginBottom: "6px" }}>
+                    Expected:{" "}
+                    {new Date(book.anticipated_release_date + "T00:00:00").toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
                 <p style={{ ...styles.text, marginBottom: "15px" }}>
                   This title is not yet available. Enter your email below and
                   we'll notify you when it releases.
