@@ -8,6 +8,25 @@ interface Book {
   slug: string;
   title: string;
   cover_photo: string;
+  carousel_category?: string | null;
+}
+
+const CATEGORY_ORDER = ["japanese", "russian", "saints", "philosophy"];
+
+function interleaveByCategory(books: Book[]): Book[] {
+  const buckets: Record<string, Book[]> = { japanese: [], russian: [], saints: [], philosophy: [] };
+  books.forEach((book) => {
+    const cat = book.carousel_category ?? "philosophy";
+    (buckets[cat] ?? buckets["philosophy"]).push(book);
+  });
+  const result: Book[] = [];
+  const maxLen = Math.max(...CATEGORY_ORDER.map((cat) => buckets[cat].length));
+  for (let i = 0; i < maxLen; i++) {
+    CATEGORY_ORDER.forEach((cat) => {
+      if (buckets[cat][i]) result.push(buckets[cat][i]);
+    });
+  }
+  return result;
 }
 
 function getVisibleCount(): number {
@@ -37,9 +56,9 @@ function TrendingBooks() {
       try {
         const { data, error } = await supabase
           .from("books")
-          .select("id, slug, title, cover_photo");
+          .select("id, slug, title, cover_photo, carousel_category");
         if (error) throw error;
-        setBooks(data ?? []);
+        setBooks(interleaveByCategory(data ?? []));
       } finally {
         setLoading(false);
       }
