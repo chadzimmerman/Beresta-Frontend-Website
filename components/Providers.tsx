@@ -27,19 +27,24 @@ export const CartContext = createContext<{
 });
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (typeof window === 'undefined') return [];
-    try {
-      const saved = localStorage.getItem('cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartHydrated, setCartHydrated] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { i18n } = useTranslation();
   const [lang, setLang] = useState('en');
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch {}
+    setCartHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!cartHydrated) return;
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart, cartHydrated]);
 
   useEffect(() => {
     setLang(i18n.language);
@@ -47,10 +52,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     i18n.on('languageChanged', handler);
     return () => i18n.off('languageChanged', handler);
   }, [i18n]);
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
 
   return (
     <CartContext.Provider value={{ cart, setCart, searchQuery, setSearchQuery }}>
