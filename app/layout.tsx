@@ -58,8 +58,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
           rel="stylesheet"
         />
-        <link rel="icon" href="/assets/logo-site.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/assets/logo-site.png" />
+        <link rel="icon" href="/assets/logo-site-letters.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/assets/logo-site-letters.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
