@@ -1,3 +1,6 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /cart
+Disallow: /success
+Disallow: /api/
+
+Sitemap: https://berestapress.com/sitemap.xml
