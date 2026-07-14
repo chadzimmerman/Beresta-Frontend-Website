@@ -12,6 +12,7 @@ interface CartItem {
   price: number;
   quantity: number;
   inventory?: number;
+  autographed?: boolean;
 }
 
 export const CartContext = createContext<{
@@ -43,7 +44,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!cartHydrated) return;
-    localStorage.setItem('cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } catch {}
   }, [cart, cartHydrated]);
 
   useEffect(() => {

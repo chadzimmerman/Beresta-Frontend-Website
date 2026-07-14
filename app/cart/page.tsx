@@ -1,14 +1,12 @@
 'use client';
 
-import { useContext } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import { useContext, useState } from 'react';
+import { toast } from 'react-toastify';
 import { CartContext } from '@/components/Providers';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useTranslation } from 'react-i18next';
 import '@/lib/i18n';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CartPage() {
   const { cart, setCart } = useContext(CartContext);
@@ -34,19 +32,26 @@ export default function CartPage() {
     );
   };
 
+  const [checkingOut, setCheckingOut] = useState(false);
+
   const handleCheckout = async () => {
+    if (checkingOut) return;
+    setCheckingOut(true);
     try {
-      const stripe = await stripePromise;
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: cart }),
       });
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
-      const { id } = await response.json();
-      await stripe!.redirectToCheckout({ sessionId: id });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || `Server error: ${response.status}`);
+      }
+      window.location.href = data.url;
     } catch (error) {
       console.error('Checkout error:', error);
+      toast.error('Something went wrong starting checkout. Please try again.');
+      setCheckingOut(false);
     }
   };
 

@@ -36,7 +36,7 @@ const AMAZON_STORE =
 export default function BookPageClient({ book }: { book: Book }) {
   const { t, i18n } = useTranslation() as { t: (key: string) => string; i18n: any };
   const isRu = i18n.language === 'ru';
-  const { setCart } = useContext(CartContext);
+  const { cart, setCart } = useContext(CartContext);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [notifyEmail, setNotifyEmail] = useState('');
@@ -74,20 +74,24 @@ export default function BookPageClient({ book }: { book: Book }) {
   };
 
   const addToCart = (price?: number) => {
+    const existing = cart.find((item) => item.id === book.id);
+    if (existing && book.inventory != null && existing.quantity >= book.inventory) {
+      toast.warn(`Only ${book.inventory} available!`);
+      return;
+    }
     const newItem = {
       id: book.id,
       title: book.title,
       price: Math.round((price ?? book.price) * 100),
       quantity: 1,
       inventory: book.inventory ?? undefined,
+      // Server re-derives the real price from the DB; this flag picks which one
+      autographed: price != null,
     };
     setCart((prev) => {
-      const existing = prev.find((item) => item.id === newItem.id);
-      if (existing) {
-        if (book.inventory != null && existing.quantity >= book.inventory) {
-          toast.warn(`Only ${book.inventory} available!`);
-          return prev;
-        }
+      const current = prev.find((item) => item.id === newItem.id);
+      if (current) {
+        if (book.inventory != null && current.quantity >= book.inventory) return prev;
         return prev.map((item) =>
           item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item
         );

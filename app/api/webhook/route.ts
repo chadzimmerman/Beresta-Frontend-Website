@@ -21,6 +21,34 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ received: true });
     }
 
+    // Only decrement inventory once payment is actually collected
+    if (session.payment_status !== 'paid') {
+      return NextResponse.json({ received: true });
+    }
+
+    // Idempotency: Stripe delivers events at-least-once. Record the event ID
+    // with a unique constraint; a 409 means we already processed this event.
+    // Any other failure (e.g. table missing) fails open so inventory still updates.
+    const idempotencyRes = await fetch(
+      `${process.env.SUPABASE_URL}/rest/v1/processed_webhook_events`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY!}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ stripe_event_id: event.id }),
+      }
+    );
+    if (idempotencyRes.status === 409) {
+      return NextResponse.json({ received: true });
+    }
+    if (!idempotencyRes.ok) {
+      console.error('Idempotency insert failed:', idempotencyRes.status);
+    }
+
     let items: { id: number; quantity: number }[] = [];
     try {
       items = JSON.parse(session.metadata?.items || '[]');

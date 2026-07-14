@@ -9,11 +9,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: books } = await supabase.from('books').select('slug');
 
-  const bookUrls = (books ?? []).map((book: { slug: string }) => ({
-    url: `https://berestapress.com/book/${book.slug}`,
-    priority: 0.9,
-    changeFrequency: 'monthly' as const,
-  }));
+  const bookUrls = (books ?? [])
+    .filter((book): book is { slug: string } => typeof book.slug === 'string' && book.slug.length > 0)
+    .map((book) => ({
+      url: `https://berestapress.com/book/${book.slug}`,
+      priority: 0.9,
+      changeFrequency: 'monthly' as const,
+    }));
 
   return [
     { url: 'https://berestapress.com', priority: 1.0, changeFrequency: 'weekly' },

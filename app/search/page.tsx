@@ -24,12 +24,15 @@ function SearchResults() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!query.trim()) { setBooks([]); setLoading(false); return; }
+    // Strip characters with special meaning in PostgREST filter strings
+    // (clause separators, wildcards, array-literal braces) to prevent injection
+    const safeQuery = query.replace(/[%_(){},"\\]/g, ' ').trim();
+    if (!safeQuery) { setBooks([]); setLoading(false); return; }
     setLoading(true);
     supabase
       .from('books')
       .select('id, slug, title, authors, cover_photo, status')
-      .or(`title.ilike.%${query}%,authors.ilike.%${query}%,description.ilike.%${query}%,tags.cs.{${query}}`)
+      .or(`title.ilike.%${safeQuery}%,authors.ilike.%${safeQuery}%,description.ilike.%${safeQuery}%,tags.cs.{"${safeQuery}"}`)
       .then(({ data }) => { setBooks(data ?? []); setLoading(false); });
   }, [query]);
 

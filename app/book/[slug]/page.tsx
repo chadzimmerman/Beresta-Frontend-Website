@@ -16,7 +16,9 @@ export const revalidate = 3600;
 // Pre-render all known book slugs at build time
 export async function generateStaticParams() {
   const { data } = await getSupabase().from('books').select('slug');
-  return (data ?? []).map((book: { slug: string }) => ({ slug: book.slug }));
+  return (data ?? [])
+    .filter((book): book is { slug: string } => typeof book.slug === 'string' && book.slug.length > 0)
+    .map((book) => ({ slug: book.slug }));
 }
 
 // Per-page <title> and <meta description> injected into the HTML <head>
@@ -77,7 +79,7 @@ export default async function BookPage(
       url: 'https://berestapress.com',
     },
     ...(book.page_count ? { numberOfPages: book.page_count } : {}),
-    ...(book.status === 'available'
+    ...(book.status === 'available' && book.inventory !== 0
       ? {
           offers: {
             '@type': 'Offer',
