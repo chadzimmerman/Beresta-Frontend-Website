@@ -5,9 +5,9 @@ import '@/styles/header.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://berestapress.com'),
-  title: 'Beresta Press | Independent Literary Publisher of Orthodox & Russian Translations',
+  title: 'Beresta Press | Independent Literary Publisher of Eastern Thought & Folklore',
   description:
-    'Beresta Press (Beresta Literary Press) is an independent publisher of first English translations of Orthodox Christian theology, Russian philosophy, and Slavic folklore. Purchase signed author copies directly or find our books on Amazon.',
+    'Beresta Press (Beresta Literary Press) is an independent publisher bringing rare and untranslated works into English — Japanese yokai and Slavic folklore, philosophy, history, fairy tales, and Orthodox Christian texts. Purchase signed author copies directly or find our books on Amazon.',
   alternates: { canonical: '/' },
   openGraph: {
     siteName: 'Beresta Press',
@@ -27,7 +27,7 @@ const orgJsonLd = {
   url: 'https://berestapress.com',
   logo: 'https://berestapress.com/assets/logo-site.png',
   description:
-    'Independent literary publisher specializing in first English translations of Orthodox Christian theology, Russian philosophy, and Slavic folklore.',
+    'Independent literary publisher bringing rare and untranslated works into English — Japanese yokai and Slavic folklore, philosophy, history, fairy tales, and Orthodox Christian texts.',
 };
 
 const websiteJsonLd = {
